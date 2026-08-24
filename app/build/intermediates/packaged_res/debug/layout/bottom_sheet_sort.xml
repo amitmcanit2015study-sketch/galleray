@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_sort"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupSort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <RadioButton
+            android:id="@+id/rbDateDesc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/sort_date_desc" />
+
+        <RadioButton
+            android:id="@+id/rbDateAsc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/sort_date_asc" />
+
+        <RadioButton
+            android:id="@+id/rbNameAsc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/sort_name_asc" />
+
+        <RadioButton
+            android:id="@+id/rbNameDesc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/sort_name_desc" />
+
+        <RadioButton
+            android:id="@+id/rbSizeDesc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/sort_size_desc" />
+
+        <RadioButton
+            android:id="@+id/rbSizeAsc"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/sort_size_asc" />
+
+    </RadioGroup>
+
+</LinearLayout>

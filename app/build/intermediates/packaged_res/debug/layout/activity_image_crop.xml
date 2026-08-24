@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0E0F14">
+
+    <!-- Top Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#16171E"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="#FFFFFF"
+        app:title="Edit &amp; Enhance"
+        app:titleTextColor="#FFFFFF"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnSaveConfig"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Resize &amp; Target Size"
+                android:src="@drawable/ic_aspect_ratio"
+                app:tint="#A0A5BD" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="16dp"
+                android:text="Save"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:backgroundTint="#3B50DF"
+                app:cornerRadius="19dp"
+                app:elevation="2dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!-- Crop & Image Workspace -->
+    <com.amitbharat.gallery.ui.custom.CropImageView
+        android:id="@+id/cropImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/controlPanel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <!-- Bottom Control Panel -->
+    <LinearLayout
+        android:id="@+id/controlPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#16171E"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Mode Switcher Tabs (Crop | Adjust | Filters) -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabEditorMode"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginBottom="12dp"
+            android:background="@android:color/transparent"
+            app:tabIndicatorColor="#3B50DF"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="@android:color/transparent"
+            app:tabSelectedTextColor="#FFFFFF"
+            app:tabTextColor="#8E92A8"
+            app:tabTextAppearance="@style/TextAppearance.Material3.BodySmall">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📐 Crop" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✨ Adjust" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎨 Filters" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <!-- 1. CROP & TRANSFORM SECTION -->
+        <LinearLayout
+            android:id="@+id/sectionCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupRatios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/crop_free"
+                        android:textColor="@color/crop_chip_text"
+                        app:chipBackgroundColor="@color/crop_chip_background"
+                        app:chipStrokeColor="@color/crop_chip_stroke"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipCornerRadius="16dp"
+                        app:checkedIconVisible="true"
+                        app:checkedIconTint="#FFFFFF" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip1_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/crop_square"
+                        android:textColor="@color/crop_chip_text"
+                        app:chipBackgroundColor="@color/crop_chip_background"
+                        app:chipStrokeColor="@color/crop_chip_stroke"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipCornerRadius="16dp"
+                        app:checkedIconVisible="true"
+                        app:checkedIconTint="#FFFFFF" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip4_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/crop_4_3"
+                        android:textColor="@color/crop_chip_text"
+                        app:chipBackgroundColor="@color/crop_chip_background"
+                        app:chipStrokeColor="@color/crop_chip_stroke"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipCornerRadius="16dp"
+                        app:checkedIconVisible="true"
+                        app:checkedIconTint="#FFFFFF" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip16_9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/crop_16_9"
+                        android:textColor="@color/crop_chip_text"
+                        app:chipBackgroundColor="@color/crop_chip_background"
+                        app:chipStrokeColor="@color/crop_chip_stroke"
+                        app:chipStrokeWidth="1.5dp"
+                        app:chipCornerRadius="16dp"
+                        app:checkedIconVisible="true"
+                        app:checkedIconTint="#FFFFFF" />
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRotate"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="Rotate"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12.5sp"
+                    app:backgroundTint="#242634"
+                    app:strokeColor="#3F4257"
+                    app:strokeWidth="1.5dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_rotate"
+                    app:iconTint="#FFFFFF"
+                    app:iconSize="16dp"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFlipH"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="3dp"
+                    android:text="Flip H"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12.5sp"
+                    app:backgroundTint="#242634"
+                    app:strokeColor="#3F4257"
+                    app:strokeWidth="1.5dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_flip_horizontal"
+                    app:iconTint="#FFFFFF"
+                    app:iconSize="16dp"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFlipV"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Flip V"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12.5sp"
+                    app:backgroundTint="#242634"
+                    app:strokeColor="#3F4257"
+                    app:strokeWidth="1.5dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_flip_vertical"
+                    app:iconTint="#FFFFFF"
+                    app:iconSize="16dp"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 2. ADJUST & ENHANCE SECTION -->
+        <LinearLayout
+            android:id="@+id/sectionAdjust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Brightness -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:text="☀️ Brightness"
+                    android:textColor="#D0D3E5"
+                    android:textSize="11.5sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderBrightness"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:value="0"
+                    android:valueFrom="-100"
+                    android:valueTo="100"
+                    android:stepSize="1"
+                    app:thumbColor="#3B50DF"
+                    app:trackColorActive="#3B50DF"
+                    app:trackColorInactive="#3F4257" />
+
+                <TextView
+                    android:id="@+id/tvValBrightness"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11.5sp" />
+            </LinearLayout>
+
+            <!-- Contrast -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:text="🌓 Contrast"
+                    android:textColor="#D0D3E5"
+                    android:textSize="11.5sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderContrast"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:value="0"
+                    android:valueFrom="-100"
+                    android:valueTo="100"
+                    android:stepSize="1"
+                    app:thumbColor="#3B50DF"
+                    app:trackColorActive="#3B50DF"
+                    app:trackColorInactive="#3F4257" />
+
+                <TextView
+                    android:id="@+id/tvValContrast"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11.5sp" />
+            </LinearLayout>
+
+            <!-- Saturation -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:text="🎨 Saturation"
+                    android:textColor="#D0D3E5"
+                    android:textSize="11.5sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderSaturation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:value="0"
+                    android:valueFrom="-100"
+                    android:valueTo="100"
+                    android:stepSize="1"
+                    app:thumbColor="#3B50DF"
+                    app:trackColorActive="#3B50DF"
+                    app:trackColorInactive="#3F4257" />
+
+                <TextView
+                    android:id="@+id/tvValSaturation"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11.5sp" />
+            </LinearLayout>
+
+            <!-- Warmth -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:text="🌡️ Warmth"
+                    android:textColor="#D0D3E5"
+                    android:textSize="11.5sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/sliderWarmth"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:value="0"
+                    android:valueFrom="-100"
+                    android:valueTo="100"
+                    android:stepSize="1"
+                    app:thumbColor="#3B50DF"
+                    app:trackColorActive="#3B50DF"
+                    app:trackColorInactive="#3F4257" />
+
+                <TextView
+                    android:id="@+id/tvValWarmth"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11.5sp" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnResetAdjustments"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_gravity="end"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="Reset Adjustments"
+                android:textColor="#A0A5BD"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- 3. COLOR FILTERS SECTION -->
+        <HorizontalScrollView
+            android:id="@+id/sectionFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterOriginal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Original"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterAuto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨ Auto Enhance"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterVivid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🌈 Vivid"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterBW"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🖤 B&amp;W"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterWarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="☀️ Warm Glow"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterCool"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="❄️ Cool Breeze"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterVintage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📼 Vintage"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilterDramatic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎭 Dramatic"
+                    android:textColor="@color/crop_chip_text"
+                    app:chipBackgroundColor="@color/crop_chip_background"
+                    app:chipStrokeColor="@color/crop_chip_stroke"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipCornerRadius="16dp"
+                    app:checkedIconVisible="true"
+                    app:checkedIconTint="#FFFFFF" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

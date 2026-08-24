@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Theme Colors (Material 3 Indigo / Modern Blue-Purple) -->
+    <color name="md_theme_light_primary">#3B50DF</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#DFE0FF</color>
+    <color name="md_theme_light_onPrimaryContainer">#000B5C</color>
+
+    <color name="md_theme_light_secondary">#5C5D72</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#E1E0F9</color>
+    <color name="md_theme_light_onSecondaryContainer">#191A2C</color>
+
+    <color name="md_theme_light_tertiary">#78536B</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#FFD7EE</color>
+    <color name="md_theme_light_onTertiaryContainer">#2E1126</color>
+
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+
+    <color name="md_theme_light_background">#FDFBFF</color>
+    <color name="md_theme_light_onBackground">#1A1B1F</color>
+    <color name="md_theme_light_surface">#FDFBFF</color>
+    <color name="md_theme_light_onSurface">#1A1B1F</color>
+    <color name="md_theme_light_surfaceVariant">#E3E1EC</color>
+    <color name="md_theme_light_onSurfaceVariant">#46464F</color>
+    <color name="md_theme_light_outline">#777680</color>
+
+    <!-- Dark Theme Colors -->
+    <color name="md_theme_dark_primary">#BCC2FF</color>
+    <color name="md_theme_dark_onPrimary">#00189B</color>
+    <color name="md_theme_dark_primaryContainer">#1F35C7</color>
+    <color name="md_theme_dark_onPrimaryContainer">#DFE0FF</color>
+
+    <color name="md_theme_dark_secondary">#C5C4DD</color>
+    <color name="md_theme_dark_onSecondary">#2E2F42</color>
+    <color name="md_theme_dark_secondaryContainer">#444559</color>
+    <color name="md_theme_dark_onSecondaryContainer">#E1E0F9</color>
+
+    <color name="md_theme_dark_tertiary">#E7B9D5</color>
+    <color name="md_theme_dark_onTertiary">#46263B</color>
+    <color name="md_theme_dark_tertiaryContainer">#5E3C52</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FFD7EE</color>
+
+    <color name="md_theme_dark_error">#FFB4AB</color>
+    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
+
+    <color name="md_theme_dark_background">#111216</color>
+    <color name="md_theme_dark_onBackground">#E4E1E6</color>
+    <color name="md_theme_dark_surface">#1A1B1F</color>
+    <color name="md_theme_dark_onSurface">#E4E1E6</color>
+    <color name="md_theme_dark_surfaceVariant">#25272F</color>
+    <color name="md_theme_dark_onSurfaceVariant">#C7C5D0</color>
+    <color name="md_theme_dark_outline">#91909A</color>
+
+    <!-- Storage Analyzer Category Colors (Xiaomi-style vibrant palette) -->
+    <color name="cat_images">#388AF6</color>
+    <color name="cat_videos">#9B51E0</color>
+    <color name="cat_audio">#F2994A</color>
+    <color name="cat_documents">#27AE60</color>
+    <color name="cat_apks">#EB5757</color>
+    <color name="cat_archives">#2D9CDB</color>
+    <color name="cat_others">#828282</color>
+    <color name="cat_free">#E0E0E0</color>
+
+    <!-- Extra UI Gradients & Overlays -->
+    <color name="gradient_start">#3B50DF</color>
+    <color name="gradient_end">#8F39D6</color>
+    <color name="scrim_dark">#99000000</color>
+    <color name="selection_overlay">#553B50DF</color>
+    <color name="card_stroke_light">#E0E0E6</color>
+    <color name="card_stroke_dark">#2C2D35</color>
+</resources>

@@ -1,0 +1,134 @@
+[
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_media_list.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_media_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_secure_vault.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_secure_vault.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\fragment_all_media.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\fragment_all_media.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_storage_category.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_storage_category.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_media_grid.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_media_grid.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\dialog_file_properties.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\dialog_file_properties.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\fragment_device_explorer.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\fragment_device_explorer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\dialog_rename.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\dialog_rename.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_trash_grid.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_trash_grid.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_image_crop.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_image_crop.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_storage_analyzer.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_storage_analyzer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_recycle_bin.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_recycle_bin.xml"
+    },
+    {
+        "merged": "com.amitbharat.gallery.app-mergeDebugResources-40:/layout/activity_storage_analyzer.xml",
+        "source": "com.amitbharat.gallery.app-main-43:/layout/activity_storage_analyzer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_folder_grid.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_folder_grid.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_splash.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\dialog_crop_save_options.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\dialog_crop_save_options.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_storage_card.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_storage_card.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\dialog_create_folder.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\dialog_create_folder.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_viewer_page.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_viewer_page.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_search.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_search.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_about.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_about.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_video_trim.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_video_trim.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_vault_grid.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_vault_grid.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_video_player.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_video_player.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\bottom_sheet_sort.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\bottom_sheet_sort.xml"
+    },
+    {
+        "merged": "com.amitbharat.gallery.app-mergeDebugResources-40:/layout/fragment_device_explorer.xml",
+        "source": "com.amitbharat.gallery.app-main-43:/layout/fragment_device_explorer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_folder_detail.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_folder_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_breadcrumb.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_breadcrumb.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\fragment_folders.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\fragment_folders.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_settings.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\item_file_list.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\item_file_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-mergeDebugResources-40:\\layout\\activity_image_viewer.xml",
+        "source": "C:\\Users\\Administrator\\.gradle\\daemon\\8.7\\com.amitbharat.gallery.app-main-43:\\layout\\activity_image_viewer.xml"
+    }
+]
