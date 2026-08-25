@@ -17,6 +17,7 @@ import com.amitbharat.gallery.databinding.ActivityMainBinding;
 import com.amitbharat.gallery.ui.fragments.AllMediaFragment;
 import com.amitbharat.gallery.ui.fragments.DeviceExplorerFragment;
 import com.amitbharat.gallery.ui.fragments.FoldersFragment;
+import com.amitbharat.gallery.ui.fragments.VaultFragment;
 import com.amitbharat.gallery.utils.FileUtils;
 import com.amitbharat.gallery.utils.PermissionHelper;
 import com.amitbharat.gallery.utils.PreferencesManager;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                // 3. If on Folders tab (1) or Device tab (2), go back to All Media tab (0)
+                // 3. If on Folders tab (1), Device tab (2), or Vault tab (3), go back to All Media tab (0)
                 if (binding.viewPager.getCurrentItem() != 0) {
                     binding.viewPager.setCurrentItem(0, true);
                     return;
@@ -208,6 +209,39 @@ public class MainActivity extends AppCompatActivity {
                 }
                 mediaViewModel.clearSelection();
             }
+        });
+
+        binding.btnCollage.setOnClickListener(v -> {
+            List<MediaItem> selected = mediaViewModel.getSelectedItems().getValue();
+            if (selected == null || selected.isEmpty()) return;
+
+            ArrayList<String> imagePaths = new ArrayList<>();
+            int videoCount = 0;
+            for (MediaItem item : selected) {
+                if (!item.isVideo() && item.getPath() != null) {
+                    imagePaths.add(item.getPath());
+                } else if (item.isVideo()) {
+                    videoCount++;
+                }
+            }
+
+            if (imagePaths.size() < 2) {
+                if (videoCount > 0) {
+                    Toast.makeText(this, R.string.collage_video_excluded_msg, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.collage_min_images_msg, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            if (videoCount > 0) {
+                Toast.makeText(this, R.string.collage_video_excluded_msg, Toast.LENGTH_SHORT).show();
+            }
+
+            Intent intent = new Intent(this, CollageMakerActivity.class);
+            intent.putStringArrayListExtra("image_paths", imagePaths);
+            startActivity(intent);
+            mediaViewModel.clearSelection();
         });
 
         binding.btnVault.setOnClickListener(v -> {

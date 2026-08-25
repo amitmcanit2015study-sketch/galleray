@@ -85,6 +85,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mediaList;
     }
 
+    public void clearAllSelections() {
+        for (MediaItem item : mediaList) {
+            item.setSelected(false);
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
         return isGridView ? TYPE_GRID : TYPE_LIST;

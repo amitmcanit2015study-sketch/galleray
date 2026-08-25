@@ -77,6 +77,12 @@ public class AllMediaViewModel extends AndroidViewModel {
     }
 
     public void clearSelection() {
+        List<MediaItem> all = mediaRepository.getAllMediaLive().getValue();
+        if (all != null) {
+            for (MediaItem m : all) {
+                m.setSelected(false);
+            }
+        }
         List<MediaItem> current = selectedItems.getValue();
         if (current != null) {
             for (MediaItem item : current) {

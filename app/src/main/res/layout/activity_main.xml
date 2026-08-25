@@ -88,6 +88,15 @@
                 android:contentDescription="@string/action_favorite" />
 
             <ImageButton
+                android:id="@+id/btnCollage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_collage"
+                android:contentDescription="@string/action_collage" />
+
+            <ImageButton
                 android:id="@+id/btnVault"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

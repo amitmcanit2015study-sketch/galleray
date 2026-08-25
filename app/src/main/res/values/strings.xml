@@ -15,8 +15,21 @@
     <string name="tab_all">All</string>
     <string name="tab_folders">Folders</string>
     <string name="tab_device">Device</string>
+    <string name="tab_vault">Vault</string>
 
     <!-- Top Bar & Actions -->
+    <string name="action_collage">Collage</string>
+    <string name="collage_title">Collage Maker</string>
+    <string name="collage_min_images_msg">Please select at least 2 images to create a collage</string>
+    <string name="collage_video_excluded_msg">Videos were excluded. Selected images were loaded for collage.</string>
+    <string name="collage_saving">Saving collage...</string>
+    <string name="collage_saved">Collage saved to gallery successfully</string>
+    <string name="collage_save_error">Failed to save collage</string>
+    <string name="collage_layout">Layout</string>
+    <string name="collage_ratio">Ratio</string>
+    <string name="collage_border">Border</string>
+    <string name="collage_color">Background</string>
+    <string name="collage_swap_hint">Tap two images to swap positions</string>
     <string name="action_search">Search</string>
     <string name="action_view_grid">Grid View</string>
     <string name="action_view_list">List View</string>

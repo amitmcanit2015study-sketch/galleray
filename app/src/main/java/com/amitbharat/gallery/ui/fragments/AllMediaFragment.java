@@ -56,6 +56,18 @@ public class AllMediaFragment extends Fragment implements MediaGridAdapter.OnMed
             binding.swipeRefresh.setRefreshing(isLoading);
         });
 
+        viewModel.getIsSelectionMode().observe(getViewLifecycleOwner(), isSelection -> {
+            if (Boolean.FALSE.equals(isSelection) && adapter != null) {
+                adapter.clearAllSelections();
+            }
+        });
+
+        viewModel.getSelectedItems().observe(getViewLifecycleOwner(), selected -> {
+            if ((selected == null || selected.isEmpty()) && adapter != null) {
+                adapter.clearAllSelections();
+            }
+        });
+
         if (viewModel.getMediaList().getValue() == null || viewModel.getMediaList().getValue().isEmpty()) {
             viewModel.loadMedia();
         }
@@ -133,6 +145,9 @@ public class AllMediaFragment extends Fragment implements MediaGridAdapter.OnMed
     public void onResume() {
         super.onResume();
         updateViewMode();
+        if (viewModel != null) {
+            viewModel.loadMedia();
+        }
     }
 
     @Override
