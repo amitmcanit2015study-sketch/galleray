@@ -199,6 +199,12 @@ public class DeviceExplorerViewModel extends AndroidViewModel {
     }
 
     public void clearSelection() {
+        List<FileItem> all = fileRepository.getCurrentFilesLive().getValue();
+        if (all != null) {
+            for (FileItem item : all) {
+                item.setSelected(false);
+            }
+        }
         List<FileItem> current = selectedFiles.getValue();
         if (current != null) {
             for (FileItem item : current) {

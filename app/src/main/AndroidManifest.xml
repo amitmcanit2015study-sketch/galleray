@@ -24,6 +24,9 @@
     <!-- Wallpaper permission for Image Viewer -->
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
+    <!-- Install Unknown Packages permission for opening APK files -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <application
         android:name=".GalleryApplication"
         android:allowBackup="true"

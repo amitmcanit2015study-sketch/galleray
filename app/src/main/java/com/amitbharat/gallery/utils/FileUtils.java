@@ -195,15 +195,33 @@ public class FileUtils {
     }
 
     public static void openFileWithIntent(Context context, File file) {
+        if (context == null || file == null || !file.exists()) return;
         try {
             Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
             String mime = getMimeType(file.getAbsolutePath());
+            String fileName = file.getName().toLowerCase(Locale.ROOT);
+
+            if (fileName.endsWith(".apk") || "application/vnd.android.package-archive".equals(mime)) {
+                Intent installIntent = new Intent(Intent.ACTION_VIEW);
+                installIntent.setDataAndType(uri, "application/vnd.android.package-archive");
+                installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(installIntent);
+                return;
+            }
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(uri, mime);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            context.startActivity(Intent.createChooser(intent, "Open with"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent chooser = Intent.createChooser(intent, "Open with");
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(chooser);
+        } catch (android.content.ActivityNotFoundException e) {
+            android.widget.Toast.makeText(context, "No app found to open this file", android.widget.Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
+            android.widget.Toast.makeText(context, "Error opening file: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
         }
     }
 

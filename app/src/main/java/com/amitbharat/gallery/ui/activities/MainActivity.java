@@ -64,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
                     mediaViewModel.clearSelection();
                     return;
                 }
+                if (Boolean.TRUE.equals(deviceExplorerViewModel.getIsSelectionMode().getValue())) {
+                    deviceExplorerViewModel.clearSelection();
+                    return;
+                }
 
                 // 2. If on Device Explorer tab and there is directory history, navigate back
                 if (binding.viewPager.getCurrentItem() == 2 && deviceExplorerViewModel != null) {
@@ -161,6 +165,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.viewPager.registerOnPageChangeCallback(new androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (position == 2) {
+                    if (Boolean.TRUE.equals(mediaViewModel.getIsSelectionMode().getValue())) {
+                        mediaViewModel.clearSelection();
+                    }
+                } else {
+                    if (Boolean.TRUE.equals(deviceExplorerViewModel.getIsSelectionMode().getValue())) {
+                        deviceExplorerViewModel.clearSelection();
+                    }
+                }
+                updateBottomActionBar();
+            }
+        });
+
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
             switch (position) {
                 case 0:
@@ -176,28 +197,83 @@ public class MainActivity extends AppCompatActivity {
         }).attach();
     }
 
+    private void updateBottomActionBar() {
+        int currentTab = binding.viewPager.getCurrentItem();
+        if (currentTab == 2) {
+            boolean isDeviceSelection = Boolean.TRUE.equals(deviceExplorerViewModel.getIsSelectionMode().getValue());
+            binding.bottomActionBar.setVisibility(isDeviceSelection ? View.VISIBLE : View.GONE);
+            if (isDeviceSelection) {
+                binding.btnFavorite.setVisibility(View.GONE);
+                binding.btnCollage.setVisibility(View.GONE);
+                binding.btnVault.setVisibility(View.VISIBLE);
+                binding.btnShare.setVisibility(View.VISIBLE);
+                binding.btnDelete.setVisibility(View.VISIBLE);
+                binding.btnSelectAll.setVisibility(View.VISIBLE);
+                binding.btnCloseSelection.setVisibility(View.VISIBLE);
+            }
+        } else {
+            boolean isMediaSelection = Boolean.TRUE.equals(mediaViewModel.getIsSelectionMode().getValue());
+            binding.bottomActionBar.setVisibility(isMediaSelection ? View.VISIBLE : View.GONE);
+            if (isMediaSelection) {
+                binding.btnFavorite.setVisibility(View.VISIBLE);
+                binding.btnCollage.setVisibility(View.VISIBLE);
+                binding.btnVault.setVisibility(View.VISIBLE);
+                binding.btnShare.setVisibility(View.VISIBLE);
+                binding.btnDelete.setVisibility(View.VISIBLE);
+                binding.btnSelectAll.setVisibility(View.VISIBLE);
+                binding.btnCloseSelection.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     private void observeSelectionMode() {
-        mediaViewModel.getIsSelectionMode().observe(this, isSelected -> {
-            binding.bottomActionBar.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        mediaViewModel.getIsSelectionMode().observe(this, isSelected -> updateBottomActionBar());
+        deviceExplorerViewModel.getIsSelectionMode().observe(this, isSelected -> updateBottomActionBar());
+
+        binding.btnCloseSelection.setOnClickListener(v -> {
+            if (binding.viewPager.getCurrentItem() == 2) {
+                deviceExplorerViewModel.clearSelection();
+            } else {
+                mediaViewModel.clearSelection();
+            }
         });
 
-        binding.btnCloseSelection.setOnClickListener(v -> mediaViewModel.clearSelection());
-
         binding.btnSelectAll.setOnClickListener(v -> {
-            List<MediaItem> all = mediaViewModel.getMediaList().getValue();
-            if (all != null) {
-                mediaViewModel.selectAll(all);
+            if (binding.viewPager.getCurrentItem() == 2) {
+                List<com.amitbharat.gallery.data.models.FileItem> all = deviceExplorerViewModel.getCurrentFilesLive().getValue();
+                if (all != null) {
+                    deviceExplorerViewModel.selectAll(all);
+                    if (deviceExplorerFragment != null && deviceExplorerFragment.isAdded()) {
+                        deviceExplorerFragment.refreshAdapter();
+                    }
+                }
+            } else {
+                List<MediaItem> all = mediaViewModel.getMediaList().getValue();
+                if (all != null) {
+                    mediaViewModel.selectAll(all);
+                }
             }
         });
 
         binding.btnShare.setOnClickListener(v -> {
-            List<MediaItem> selected = mediaViewModel.getSelectedItems().getValue();
-            if (selected != null && !selected.isEmpty()) {
-                List<File> files = new ArrayList<>();
-                for (MediaItem m : selected) {
-                    if (m.getPath() != null) files.add(new File(m.getPath()));
+            if (binding.viewPager.getCurrentItem() == 2) {
+                List<com.amitbharat.gallery.data.models.FileItem> selected = deviceExplorerViewModel.getSelectedFiles().getValue();
+                if (selected != null && !selected.isEmpty()) {
+                    List<File> files = new ArrayList<>();
+                    for (com.amitbharat.gallery.data.models.FileItem f : selected) {
+                        if (f.getPath() != null) files.add(new File(f.getPath()));
+                    }
+                    FileUtils.shareFiles(this, files);
                 }
-                FileUtils.shareFiles(this, files);
+            } else {
+                List<MediaItem> selected = mediaViewModel.getSelectedItems().getValue();
+                if (selected != null && !selected.isEmpty()) {
+                    List<File> files = new ArrayList<>();
+                    for (MediaItem m : selected) {
+                        if (m.getPath() != null) files.add(new File(m.getPath()));
+                    }
+                    FileUtils.shareFiles(this, files);
+                }
             }
         });
 
@@ -245,56 +321,110 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.btnVault.setOnClickListener(v -> {
-            List<MediaItem> selected = mediaViewModel.getSelectedItems().getValue();
-            if (selected != null && !selected.isEmpty()) {
-                new MaterialAlertDialogBuilder(this)
-                        .setTitle("Hide " + selected.size() + " items in Secure Vault?")
-                        .setMessage("These files will be moved to your private encrypted vault and hidden from the public gallery.")
-                        .setPositiveButton("Hide in Vault", (d, w) -> {
-                            com.amitbharat.gallery.data.repository.VaultRepository vaultRepo = new com.amitbharat.gallery.data.repository.VaultRepository(this);
-                            final int total = selected.size();
-                            final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(0);
-                            for (MediaItem m : selected) {
-                                vaultRepo.hideMedia(m, () -> {
-                                    if (count.incrementAndGet() >= total) {
-                                        runOnUiThread(() -> {
-                                            android.widget.Toast.makeText(this, "Moved " + total + " items to Secure Vault", android.widget.Toast.LENGTH_SHORT).show();
-                                            mediaViewModel.clearSelection();
-                                            mediaViewModel.loadMedia();
-                                        });
-                                    }
-                                });
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+            if (binding.viewPager.getCurrentItem() == 2) {
+                List<com.amitbharat.gallery.data.models.FileItem> selected = deviceExplorerViewModel.getSelectedFiles().getValue();
+                if (selected != null && !selected.isEmpty()) {
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle("Hide " + selected.size() + " items in Secure Vault?")
+                            .setMessage("These files will be moved to your private encrypted vault.")
+                            .setPositiveButton("Hide in Vault", (d, w) -> {
+                                com.amitbharat.gallery.data.repository.VaultRepository vaultRepo = new com.amitbharat.gallery.data.repository.VaultRepository(this);
+                                final int total = selected.size();
+                                final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(0);
+                                for (com.amitbharat.gallery.data.models.FileItem f : selected) {
+                                    vaultRepo.hideFile(f, () -> {
+                                        if (count.incrementAndGet() >= total) {
+                                            runOnUiThread(() -> {
+                                                android.widget.Toast.makeText(this, "Moved " + total + " items to Secure Vault", android.widget.Toast.LENGTH_SHORT).show();
+                                                deviceExplorerViewModel.clearSelection();
+                                                deviceExplorerViewModel.refresh();
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+            } else {
+                List<MediaItem> selected = mediaViewModel.getSelectedItems().getValue();
+                if (selected != null && !selected.isEmpty()) {
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle("Hide " + selected.size() + " items in Secure Vault?")
+                            .setMessage("These files will be moved to your private encrypted vault and hidden from the public gallery.")
+                            .setPositiveButton("Hide in Vault", (d, w) -> {
+                                com.amitbharat.gallery.data.repository.VaultRepository vaultRepo = new com.amitbharat.gallery.data.repository.VaultRepository(this);
+                                final int total = selected.size();
+                                final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(0);
+                                for (MediaItem m : selected) {
+                                    vaultRepo.hideMedia(m, () -> {
+                                        if (count.incrementAndGet() >= total) {
+                                            runOnUiThread(() -> {
+                                                android.widget.Toast.makeText(this, "Moved " + total + " items to Secure Vault", android.widget.Toast.LENGTH_SHORT).show();
+                                                mediaViewModel.clearSelection();
+                                                mediaViewModel.loadMedia();
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
             }
         });
 
         binding.btnDelete.setOnClickListener(v -> {
-            List<MediaItem> selected = mediaViewModel.getSelectedItems().getValue();
-            if (selected != null && !selected.isEmpty()) {
-                final int total = selected.size();
-                new MaterialAlertDialogBuilder(this)
-                        .setTitle("Delete " + (total == 1 ? "1 item" : total + " items") + "?")
-                        .setMessage("Move " + (total == 1 ? "this item" : "these " + total + " items") + " to the Recycle Bin? You can restore them later.")
-                        .setPositiveButton("Yes", (d, which) -> {
-                            com.amitbharat.gallery.data.repository.TrashRepository trashRepo = new com.amitbharat.gallery.data.repository.TrashRepository(this);
-                            final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(0);
-                            for (MediaItem m : selected) {
-                                trashRepo.moveToTrash(m, () -> {
-                                    if (count.incrementAndGet() >= total) {
-                                        runOnUiThread(() -> {
-                                            android.widget.Toast.makeText(this, "Moved " + total + " items to Recycle Bin", android.widget.Toast.LENGTH_SHORT).show();
-                                            mediaViewModel.clearSelection();
-                                            mediaViewModel.loadMedia();
-                                        });
-                                    }
-                                });
-                            }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
+            if (binding.viewPager.getCurrentItem() == 2) {
+                List<com.amitbharat.gallery.data.models.FileItem> selected = deviceExplorerViewModel.getSelectedFiles().getValue();
+                if (selected != null && !selected.isEmpty()) {
+                    final int total = selected.size();
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle("Delete " + (total == 1 ? "1 item" : total + " items") + "?")
+                            .setMessage("Move " + (total == 1 ? "this item" : "these " + total + " items") + " to the Recycle Bin? You can restore them later.")
+                            .setPositiveButton("Yes", (d, which) -> {
+                                com.amitbharat.gallery.data.repository.TrashRepository trashRepo = new com.amitbharat.gallery.data.repository.TrashRepository(this);
+                                final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(0);
+                                for (com.amitbharat.gallery.data.models.FileItem f : selected) {
+                                    trashRepo.moveFileToTrash(f, () -> {
+                                        if (count.incrementAndGet() >= total) {
+                                            runOnUiThread(() -> {
+                                                android.widget.Toast.makeText(this, "Moved " + total + " items to Recycle Bin", android.widget.Toast.LENGTH_SHORT).show();
+                                                deviceExplorerViewModel.clearSelection();
+                                                deviceExplorerViewModel.refresh();
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
+            } else {
+                List<MediaItem> selected = mediaViewModel.getSelectedItems().getValue();
+                if (selected != null && !selected.isEmpty()) {
+                    final int total = selected.size();
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle("Delete " + (total == 1 ? "1 item" : total + " items") + "?")
+                            .setMessage("Move " + (total == 1 ? "this item" : "these " + total + " items") + " to the Recycle Bin? You can restore them later.")
+                            .setPositiveButton("Yes", (d, which) -> {
+                                com.amitbharat.gallery.data.repository.TrashRepository trashRepo = new com.amitbharat.gallery.data.repository.TrashRepository(this);
+                                final java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger(0);
+                                for (MediaItem m : selected) {
+                                    trashRepo.moveToTrash(m, () -> {
+                                        if (count.incrementAndGet() >= total) {
+                                            runOnUiThread(() -> {
+                                                android.widget.Toast.makeText(this, "Moved " + total + " items to Recycle Bin", android.widget.Toast.LENGTH_SHORT).show();
+                                                mediaViewModel.clearSelection();
+                                                mediaViewModel.loadMedia();
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
             }
         });
     }

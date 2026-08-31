@@ -142,6 +142,24 @@ public class DeviceExplorerFragment extends Fragment implements
         viewModel.getIsLoadingLive().observe(getViewLifecycleOwner(), isLoading -> {
             binding.swipeRefresh.setRefreshing(isLoading);
         });
+
+        viewModel.getIsSelectionMode().observe(getViewLifecycleOwner(), isSelection -> {
+            if (Boolean.FALSE.equals(isSelection) && fileAdapter != null) {
+                fileAdapter.notifyDataSetChanged();
+            }
+        });
+
+        viewModel.getSelectedFiles().observe(getViewLifecycleOwner(), selected -> {
+            if ((selected == null || selected.isEmpty()) && fileAdapter != null) {
+                fileAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void refreshAdapter() {
+        if (fileAdapter != null) {
+            fileAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
