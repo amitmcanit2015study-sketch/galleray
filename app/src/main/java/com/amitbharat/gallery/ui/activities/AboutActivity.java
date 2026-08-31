@@ -40,8 +40,99 @@ public class AboutActivity extends AppCompatActivity {
 
     private void setupActions() {
         binding.btnShareApp.setOnClickListener(v -> shareAppApk());
+        binding.btnDownloadApk.setOnClickListener(v -> downloadAppApk());
         binding.btnFeedback.setOnClickListener(v -> sendFeedbackEmail());
         binding.tvEmail.setOnClickListener(v -> sendFeedbackEmail());
+    }
+
+    private void downloadAppApk() {
+        Toast.makeText(this, "Downloading APK to Downloads folder...", Toast.LENGTH_SHORT).show();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                ApplicationInfo appInfo = getApplicationInfo();
+                File originalApk = new File(appInfo.sourceDir);
+
+                if (!originalApk.exists()) {
+                    runOnUiThread(() -> Toast.makeText(this, "Could not find app APK file.", Toast.LENGTH_LONG).show());
+                    return;
+                }
+
+                String fileName = "gallary-amit-bharat.apk";
+                boolean success = false;
+                Uri downloadedUri = null;
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    android.content.ContentValues values = new android.content.ContentValues();
+                    values.put(android.provider.MediaStore.Downloads.DISPLAY_NAME, fileName);
+                    values.put(android.provider.MediaStore.Downloads.MIME_TYPE, "application/vnd.android.package-archive");
+                    values.put(android.provider.MediaStore.Downloads.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS);
+
+                    downloadedUri = getContentResolver().insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                    if (downloadedUri != null) {
+                        try (java.io.InputStream in = new java.io.FileInputStream(originalApk);
+                             java.io.OutputStream out = getContentResolver().openOutputStream(downloadedUri)) {
+                            if (out != null) {
+                                byte[] buffer = new byte[8192];
+                                int bytesRead;
+                                while ((bytesRead = in.read(buffer)) != -1) {
+                                    out.write(buffer, 0, bytesRead);
+                                }
+                                out.flush();
+                                success = true;
+                            }
+                        }
+                    }
+                } else {
+                    File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+                    if (!downloadsDir.exists()) {
+                        downloadsDir.mkdirs();
+                    }
+                    File destApk = new File(downloadsDir, fileName);
+                    FileUtils.copyFile(originalApk, destApk);
+                    android.media.MediaScannerConnection.scanFile(
+                            this,
+                            new String[]{destApk.getAbsolutePath()},
+                            new String[]{"application/vnd.android.package-archive"},
+                            null
+                    );
+                    downloadedUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", destApk);
+                    success = true;
+                }
+
+                final boolean isSaved = success;
+                final Uri finalUri = downloadedUri;
+
+                runOnUiThread(() -> {
+                    if (isSaved) {
+                        com.google.android.material.snackbar.Snackbar.make(
+                                binding.getRoot(),
+                                "Saved to Downloads: " + fileName,
+                                com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+                        ).setAction("Open Downloads", v -> {
+                            try {
+                                Intent intent = new Intent(android.app.DownloadManager.ACTION_VIEW_DOWNLOADS);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                if (finalUri != null) {
+                                    try {
+                                        Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+                                        viewIntent.setDataAndType(finalUri, "application/vnd.android.package-archive");
+                                        viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(viewIntent);
+                                    } catch (Exception ignored) {}
+                                }
+                            }
+                        }).show();
+                    } else {
+                        Toast.makeText(this, "Failed to save APK to Downloads.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(this, "Error saving APK: " + e.getMessage(), Toast.LENGTH_LONG).show());
+            }
+        });
     }
 
     private void shareAppApk() {
@@ -61,7 +152,7 @@ public class AboutActivity extends AppCompatActivity {
                 if (!shareDir.exists()) {
                     shareDir.mkdirs();
                 }
-                File targetApk = new File(shareDir, "Gallery_by_AmitBharat.apk");
+                File targetApk = new File(shareDir, "gallary-amit-bharat.apk");
                 FileUtils.copyFile(originalApk, targetApk);
 
                 Uri apkUri = FileProvider.getUriForFile(

@@ -2,18 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Legacy Storage Permissions for Android 12 and below (API <= 32) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"
+        tools:ignore="ScopedStorage" />
+
     <!-- Modern Granular Media Permissions for Android 13+ (API 33+) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <!-- Android 14+ (API 34+) Partial / User Selected Media Access -->
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
 
-    <!-- Android 13+ Notification Permission -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- Full Storage Management for File Manager operations on Android 13+ -->
+    <!-- Full Storage Management for File Manager operations on Android 11+ -->
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -24,6 +27,8 @@
     <application
         android:name=".GalleryApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="false"
+        android:requestLegacyExternalStorage="true"
         android:dataExtractionRules="@xml/file_paths"
         android:fullBackupContent="@xml/file_paths"
         android:icon="@mipmap/ic_launcher"

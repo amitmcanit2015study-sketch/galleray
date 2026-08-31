@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.amitbharat.gallery"
-        minSdk 33
+        minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0.0"
@@ -36,6 +36,12 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "gallary-amit-bharat.apk"
+        }
     }
 }
 
