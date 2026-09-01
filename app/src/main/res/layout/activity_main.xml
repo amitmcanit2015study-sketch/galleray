@@ -15,53 +15,11 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:contentInsetStartWithNavigation="16dp"
-            app:menu="@menu/main_menu">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvHeaderTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvHeaderSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_header_subtitle"
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLanguageToggle"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="10dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="0dp"
-                    android:text="हिंदी"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="16dp" />
-            </LinearLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
+            app:title="@string/app_name"
+            app:subtitle="@string/app_header_subtitle"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+            app:subtitleTextAppearance="@style/TextAppearance.Material3.BodySmall"
+            app:menu="@menu/main_menu" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
