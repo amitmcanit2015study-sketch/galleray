@@ -106,8 +106,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupToolbar() {
         updateToggleIcon(binding.topAppBar.getMenu().findItem(R.id.action_view_toggle));
-
         binding.topAppBar.setOnMenuItemClickListener(this::onToolbarMenuItemClick);
+        setupLanguageToggle();
+    }
+
+    private void setupLanguageToggle() {
+        boolean isHindi = com.amitbharat.gallery.utils.LocaleHelper.isHindi(this);
+        binding.btnLanguageToggle.setText(isHindi ? "English" : "हिंदी");
+        binding.btnLanguageToggle.setOnClickListener(v -> {
+            String targetLang = com.amitbharat.gallery.utils.LocaleHelper.isHindi(this) ? "en" : "hi";
+            com.amitbharat.gallery.utils.LocaleHelper.setLocale(this, targetLang);
+        });
     }
 
     private boolean onToolbarMenuItemClick(MenuItem item) {

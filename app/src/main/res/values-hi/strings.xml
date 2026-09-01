@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">गैलरी</string>
+    <string name="app_header_subtitle">द्वारा अमित भारत</string>
+    <string name="developer_name">अमित भारत</string>
+    <string name="developed_by_full">डेवलपर: अमित भारत</string>
+    <string name="company_name">रूयस सॉफ्ट टेक</string>
+    <string name="company_name_full">कंपनी: रूयस सॉफ्ट टेक</string>
+    <string name="company_email">rooyssofttech2020@gmail.com</string>
+    <string name="developed_by">अमित भारत द्वारा विकसित</string>
+    <string name="app_version_name">v1.0.0.2 (प्रोडक्शन बिल्ड)</string>
+    <string name="about_description">गैलरी एक मुफ्त, विज्ञापन-रहित गैलरी और फ़ाइल प्रबंधक है जो तेज़, सरल और सहज अनुभव के लिए डिज़ाइन किया गया है। साफ़ इंटरफ़ेस, सहज प्रदर्शन और गोपनीयता के साथ अपनी तस्वीरों और फ़ाइलों को आसानी से व्यवस्थित करें।</string>
+
+    <!-- Navigation Tabs -->
+    <string name="tab_all">सभी</string>
+    <string name="tab_folders">फ़ोल्डर्स</string>
+    <string name="tab_device">डिवाइस</string>
+    <string name="tab_vault">वॉल्ट</string>
+
+    <!-- Top Bar & Actions -->
+    <string name="action_collage">कोलाज</string>
+    <string name="collage_title">कोलाज मेकर</string>
+    <string name="collage_min_images_msg">कोलाज बनाने के लिए कम से कम 2 छवियां चुनें</string>
+    <string name="collage_video_excluded_msg">वीडियो हटा दिए गए। केवल छवियां कोलाज में शामिल हैं।</string>
+    <string name="collage_saving">कोलाज सहेजा जा रहा है...</string>
+    <string name="collage_saved">कोलाज गैलरी में सहेज लिया गया</string>
+    <string name="collage_save_error">कोलाज सहेजने में विफल</string>
+    <string name="collage_layout">लेआउट</string>
+    <string name="collage_ratio">अनुपात</string>
+    <string name="collage_border">बॉर्डर</string>
+    <string name="collage_color">पृष्ठभूमि</string>
+    <string name="collage_swap_hint">स्थान बदलने के लिए दो छवियों पर टैप करें</string>
+    <string name="action_search">खोजें</string>
+    <string name="action_view_grid">ग्रिड दृश्य</string>
+    <string name="action_view_list">सूची दृश्य</string>
+    <string name="action_sort">क्रमबद्ध करें</string>
+    <string name="action_select_all">सभी चुनें</string>
+    <string name="action_deselect_all">चयन हटाएं</string>
+    <string name="action_share">साझा करें</string>
+    <string name="action_delete">हटाएं</string>
+    <string name="action_rename">नाम बदलें</string>
+    <string name="action_copy">कॉपी करें</string>
+    <string name="action_move">स्थानांतरित करें</string>
+    <string name="action_compress">ज़िप (ZIP) बनाएं</string>
+    <string name="action_extract">ज़िप खोलें</string>
+    <string name="action_properties">विवरण</string>
+    <string name="action_favorite">पसंदीदा बनाएं</string>
+    <string name="action_unfavorite">पसंदीदा से हटाएं</string>
+    <string name="action_slideshow">स्लाइड शो</string>
+    <string name="action_set_wallpaper">वॉलपेपर सेट करें</string>
+    <string name="action_crop">क्रॉप और संपादित करें</string>
+    <string name="action_rotate">घुमाएं</string>
+    <string name="action_create_folder">नया फ़ोल्डर</string>
+    <string name="action_refresh">ताज़ा करें</string>
+    <string name="action_vault">सुरक्षित वॉल्ट</string>
+    <string name="action_storage_analyzer">स्टोरेज विश्लेषक</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="action_about">ऐप के बारे में</string>
+
+    <!-- Sorting Strings -->
+    <string name="sort_date_desc">दिनांक (नया पहले)</string>
+    <string name="sort_date_asc">दिनांक (पुराना पहले)</string>
+    <string name="sort_name_asc">नाम (A - Z)</string>
+    <string name="sort_name_desc">नाम (Z - A)</string>
+    <string name="sort_size_desc">आकार (बड़ा से छोटा)</string>
+    <string name="sort_size_asc">आकार (छोटा से बड़ा)</string>
+
+    <!-- Smart Albums / Categories -->
+    <string name="album_all">सभी मीडिया</string>
+    <string name="album_camera">कैमरा</string>
+    <string name="album_screenshots">स्क्रीनशॉट</string>
+    <string name="album_downloads">डाउनलोड</string>
+    <string name="album_videos">वीडियो</string>
+    <string name="album_whatsapp">व्हाट्सएप</string>
+    <string name="album_favorites">पसंदीदा</string>
+    <string name="album_trash">रीसायकल बिन</string>
+
+    <!-- Storage Analyzer Strings -->
+    <string name="storage_internal">इंटरनल स्टोरेज</string>
+    <string name="storage_sdcard">एसडी कार्ड</string>
+    <string name="storage_otg">यूएसबी ओटीजी</string>
+    <string name="storage_used_format">%2$s में से %1$s प्रयुक्त (%3$d%%)</string>
+    <string name="storage_free_format">%1$s खाली</string>
+    <string name="analyzer_title">स्टोरेज विवरण</string>
+    <string name="cat_name_images">छवियां</string>
+    <string name="cat_name_videos">वीडियो</string>
+    <string name="cat_name_audio">ऑडियो</string>
+    <string name="cat_name_docs">दस्तावेज़</string>
+    <string name="cat_name_apks">एपीके</string>
+    <string name="cat_name_archives">ज़िप और फाइलें</string>
+    <string name="cat_name_others">अन्य फाइलें</string>
+    <string name="cleaner_junk">जंक क्लीनर</string>
+    <string name="cleaner_duplicates">डुप्लिकेट खोजें</string>
+    <string name="cleaner_large_files">बड़ी फाइलें (>50 MB)</string>
+    <string name="cleaner_empty_folders">खाली फ़ोल्डर</string>
+    <string name="clean_now">अभी साफ करें</string>
+
+    <!-- Viewer & Video Player -->
+    <string name="video_speed">गति</string>
+    <string name="aspect_fit">स्क्रीन में फिट</string>
+    <string name="aspect_fill">पूरी स्क्रीन</string>
+    <string name="aspect_zoom">ज़ूम</string>
+    <string name="pip_enter">पिक्चर-इन-पिक्चर</string>
+
+    <!-- Crop & Transform -->
+    <string name="crop_free">मुक्त</string>
+    <string name="crop_square">1:1</string>
+    <string name="crop_4_3">4:3</string>
+    <string name="crop_16_9">16:9</string>
+    <string name="save_copy">कॉपी सहेजें</string>
+    <string name="overwrite_original">मूल फ़ाइल बदलें</string>
+
+    <!-- Vault Strings -->
+    <string name="vault_title">सुरक्षित निजी वॉल्ट</string>
+    <string name="vault_set_pin">4-अंकों का पिन सेट करें</string>
+    <string name="vault_enter_pin">4-अंकों का पिन दर्ज करें</string>
+    <string name="vault_pin_error">गलत पिन। पुनः प्रयास करें।</string>
+    <string name="vault_empty_msg">वॉल्ट में कोई आइटम नहीं है। सुरक्षित करें विकल्प से आइटम जोड़ें।</string>
+    <string name="vault_unlock">अनलॉक और पुनर्स्थापित करें</string>
+
+    <!-- Search & Filters -->
+    <string name="search_hint">तस्वीरें, वीडियो, फाइलें खोजें...</string>
+    <string name="filter_all">सभी</string>
+    <string name="filter_images">छवियां</string>
+    <string name="filter_videos">वीडियो</string>
+    <string name="filter_gif">GIF</string>
+    <string name="filter_raw">RAW</string>
+    <string name="filter_large">बड़ा आकार</string>
+    <string name="filter_recent">हाल का</string>
+    <string name="no_search_results">कोई मेल खाने वाला मीडिया या फ़ाइल नहीं मिली।</string>
+
+    <!-- Permissions -->
+    <string name="permission_title">स्टोरेज अनुमति आवश्यक</string>
+    <string name="permission_desc">गैलरी को आपके डिवाइस पर फ़ाइलों और फ़ोटो को प्रबंधित करने के लिए अनुमति चाहिए।</string>
+    <string name="grant_permission">अनुमति दें</string>
+
+    <!-- Settings -->
+    <string name="pref_theme">थीम</string>
+    <string name="pref_theme_system">सिस्टम डिफ़ॉल्ट</string>
+    <string name="pref_theme_light">लाइट</string>
+    <string name="pref_theme_dark">डार्क</string>
+    <string name="pref_grid_columns">ग्रिड कॉलम</string>
+    <string name="pref_show_hidden">छिपी हुई फाइलें और फ़ोल्डर दिखाएं</string>
+    <string name="pref_clear_cache">छवि और थंबनेल कैश साफ़ करें</string>
+    <string name="cache_cleared">कैश सफलतापूर्वक साफ़ कर दिया गया।</string>
+</resources>
