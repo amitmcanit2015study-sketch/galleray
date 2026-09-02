@@ -58,6 +58,7 @@
             android:name=".ui.activities.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
+            android:configChanges="locale|layoutDirection|orientation|screenSize"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -142,6 +143,7 @@
         <activity
             android:name=".ui.activities.AboutActivity"
             android:exported="false"
+            android:configChanges="locale|layoutDirection|orientation|screenSize"
             android:parentActivityName=".ui.activities.MainActivity" />
 
         <!-- Secure FileProvider for Sharing Media and Files -->
