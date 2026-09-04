@@ -9,6 +9,7 @@
     <string name="company_email">rooyssofttech2020@gmail.com</string>
     <string name="developed_by">अमित भारत द्वारा विकसित</string>
     <string name="app_version_name">v1.0.0.2 (प्रोडक्शन बिल्ड)</string>
+    <string name="about_footer">100% ऑफलाइन • विज्ञापन-मुक्त • कोई ट्रैकिंग नहीं</string>
     <string name="about_description">गैलरी एक मुफ्त, विज्ञापन-रहित गैलरी और फ़ाइल प्रबंधक है जो तेज़, सरल और सहज अनुभव के लिए डिज़ाइन किया गया है। साफ़ इंटरफ़ेस, सहज प्रदर्शन और गोपनीयता के साथ अपनी तस्वीरों और फ़ाइलों को आसानी से व्यवस्थित करें।</string>
 
     <!-- Navigation Tabs -->
@@ -56,6 +57,9 @@
     <string name="action_storage_analyzer">स्टोरेज विश्लेषक</string>
     <string name="action_settings">सेटिंग्स</string>
     <string name="action_about">ऐप के बारे में</string>
+    <string name="share_app">ऐप साझा करें</string>
+    <string name="download_apk">डाउनलोड APK</string>
+    <string name="send_feedback">प्रतिक्रिया भेजें</string>
 
     <!-- Sorting Strings -->
     <string name="sort_date_desc">दिनांक (नया पहले)</string>
