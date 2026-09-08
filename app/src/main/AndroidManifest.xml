@@ -77,9 +77,15 @@
         <!-- Image Viewer (Pinch-zoom, Slideshow, Info) -->
         <activity
             android:name=".ui.activities.ImageViewerActivity"
-            android:exported="false"
+            android:exported="true"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
-            android:theme="@style/Theme.Gallery.MediaViewer" />
+            android:theme="@style/Theme.Gallery.MediaViewer">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
 
         <!-- Image Crop & Transform Tool -->
         <activity
@@ -97,10 +103,16 @@
         <!-- Video Player (ExoPlayer with gesture controls, PiP) -->
         <activity
             android:name=".ui.activities.VideoPlayerActivity"
-            android:exported="false"
+            android:exported="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
             android:supportsPictureInPicture="true"
-            android:theme="@style/Theme.Gallery.MediaViewer" />
+            android:theme="@style/Theme.Gallery.MediaViewer">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
 
         <!-- Video Trim & Cutter Tool -->
         <activity

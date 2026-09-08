@@ -58,6 +58,53 @@ public class MainActivity extends AppCompatActivity {
         setupTabsAndViewPager();
         observeSelectionMode();
         setupBackNavigation();
+        handleIncomingIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIncomingIntent(intent);
+    }
+
+    private void handleIncomingIntent(Intent intent) {
+        if (intent == null) return;
+        String action = intent.getAction();
+        android.net.Uri dataUri = intent.getData();
+        if (Intent.ACTION_VIEW.equals(action) && dataUri != null) {
+            String type = intent.getType();
+            if (type == null) {
+                try {
+                    type = getContentResolver().getType(dataUri);
+                } catch (Exception ignored) {}
+            }
+            if (type == null) {
+                type = FileUtils.getMimeType(dataUri.toString());
+            }
+
+            boolean isVideo = (type != null && type.startsWith("video")) ||
+                    (dataUri.getPath() != null && (
+                            dataUri.getPath().endsWith(".mp4") ||
+                            dataUri.getPath().endsWith(".mkv") ||
+                            dataUri.getPath().endsWith(".mov") ||
+                            dataUri.getPath().endsWith(".webm") ||
+                            dataUri.getPath().endsWith(".3gp") ||
+                            dataUri.getPath().endsWith(".avi")
+                    ));
+
+            if (isVideo) {
+                Intent videoIntent = new Intent(this, VideoPlayerActivity.class);
+                videoIntent.setDataAndType(dataUri, type);
+                videoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(videoIntent);
+            } else {
+                Intent imageIntent = new Intent(this, ImageViewerActivity.class);
+                imageIntent.setDataAndType(dataUri, type);
+                imageIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(imageIntent);
+            }
+        }
     }
 
     private void setupBackNavigation() {

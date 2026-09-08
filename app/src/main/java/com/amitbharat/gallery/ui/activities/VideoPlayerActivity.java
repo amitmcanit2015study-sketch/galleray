@@ -49,6 +49,9 @@ public class VideoPlayerActivity extends AppCompatActivity implements VideoGestu
         setContentView(binding.getRoot());
 
         mediaItem = (com.amitbharat.gallery.data.models.MediaItem) getIntent().getSerializableExtra("media_item");
+        if (mediaItem == null && getIntent().getData() != null) {
+            mediaItem = FileUtils.getMediaItemFromUri(this, getIntent().getData());
+        }
         if (mediaItem == null) {
             finish();
             return;

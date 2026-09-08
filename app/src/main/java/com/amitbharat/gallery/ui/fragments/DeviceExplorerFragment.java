@@ -228,7 +228,9 @@ public class DeviceExplorerFragment extends Fragment implements
         item.setSize(file.getSize());
         item.setDateModified(file.getLastModified());
         item.setDateAdded(file.getLastModified());
-        item.setUri(android.net.Uri.fromFile(new File(file.getPath())));
+        android.net.Uri uri = android.net.Uri.fromFile(new File(file.getPath()));
+        item.setUri(uri);
+        item.setUriString(uri.toString());
         item.setMimeType(FileUtils.getMimeType(file.getPath()));
         item.setVideo(isVideoFile(file));
         return item;

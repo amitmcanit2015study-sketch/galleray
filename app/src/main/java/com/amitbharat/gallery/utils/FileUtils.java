@@ -2,11 +2,14 @@ package com.amitbharat.gallery.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.webkit.MimeTypeMap;
 import androidx.core.content.FileProvider;
 import com.amitbharat.gallery.R;
 import com.amitbharat.gallery.data.models.FileItem;
+import com.amitbharat.gallery.data.models.MediaItem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -250,5 +253,75 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static MediaItem getMediaItemFromUri(Context context, Uri uri) {
+        if (context == null || uri == null) return null;
+        MediaItem item = new MediaItem();
+        item.setUri(uri);
+        item.setUriString(uri.toString());
+
+        String scheme = uri.getScheme();
+        String displayName = null;
+        long size = 0;
+        String mimeType = null;
+        String path = null;
+
+        if ("file".equalsIgnoreCase(scheme)) {
+            path = uri.getPath();
+            if (path != null) {
+                File file = new File(path);
+                displayName = file.getName();
+                size = file.length();
+                mimeType = getMimeType(path);
+                item.setPath(path);
+            }
+        } else if ("content".equalsIgnoreCase(scheme)) {
+            mimeType = context.getContentResolver().getType(uri);
+            try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int nameIdx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (nameIdx != -1) {
+                        displayName = cursor.getString(nameIdx);
+                    }
+                    int sizeIdx = cursor.getColumnIndex(OpenableColumns.SIZE);
+                    if (sizeIdx != -1) {
+                        size = cursor.getLong(sizeIdx);
+                    }
+                    int dataIdx = cursor.getColumnIndex("_data");
+                    if (dataIdx != -1) {
+                        path = cursor.getString(dataIdx);
+                        item.setPath(path);
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+
+        if (displayName == null) {
+            displayName = uri.getLastPathSegment();
+            if (displayName == null) displayName = "Media";
+        }
+        if (mimeType == null && displayName != null) {
+            mimeType = getMimeType(displayName);
+        }
+        if (mimeType == null) {
+            mimeType = "*/*";
+        }
+
+        boolean isVideo = mimeType.startsWith("video") ||
+                displayName.toLowerCase(Locale.ROOT).endsWith(".mp4") ||
+                displayName.toLowerCase(Locale.ROOT).endsWith(".mkv") ||
+                displayName.toLowerCase(Locale.ROOT).endsWith(".mov") ||
+                displayName.toLowerCase(Locale.ROOT).endsWith(".3gp") ||
+                displayName.toLowerCase(Locale.ROOT).endsWith(".webm") ||
+                displayName.toLowerCase(Locale.ROOT).endsWith(".avi");
+
+        item.setDisplayName(displayName);
+        item.setSize(size);
+        item.setMimeType(mimeType);
+        item.setVideo(isVideo);
+        item.setDateAdded(System.currentTimeMillis());
+        item.setDateModified(System.currentTimeMillis());
+        return item;
     }
 }

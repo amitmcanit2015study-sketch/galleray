@@ -61,6 +61,14 @@ public class ImageViewerActivity extends AppCompatActivity implements ViewPagerM
             }
         }
 
+        if (mediaList.isEmpty() && getIntent().getData() != null) {
+            MediaItem item = FileUtils.getMediaItemFromUri(this, getIntent().getData());
+            if (item != null) {
+                mediaList.add(item);
+                currentPosition = 0;
+            }
+        }
+
         if (mediaList.isEmpty()) {
             finish();
             return;
