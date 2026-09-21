@@ -6,8 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import com.amitbharat.gallery.data.models.FolderItem;
 import com.amitbharat.gallery.data.models.MediaItem;
@@ -15,9 +17,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class MediaUtils {
 
@@ -46,11 +50,14 @@ public class MediaUtils {
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         };
 
-        String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+        String selection = "(" + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
                 + " OR "
                 + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+                + " OR (" + MediaStore.Files.FileColumns.MIME_TYPE + " LIKE 'image/%' AND " + MediaStore.Files.FileColumns.SIZE + " > 0)"
+                + " OR (" + MediaStore.Files.FileColumns.MIME_TYPE + " LIKE 'video/%' AND " + MediaStore.Files.FileColumns.SIZE + " > 0)"
+                + ")";
 
         String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
 
@@ -85,7 +92,9 @@ public class MediaUtils {
                     long dateAdded = cursor.getLong(dateAddCol) * 1000;
                     long dateModified = cursor.getLong(dateModCol) * 1000;
                     int mediaType = cursor.getInt(mediaTypeCol);
-                    boolean isVideo = mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+                    boolean isVideo = mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+                            || (mime != null && mime.startsWith("video/"))
+                            || (name != null && isVideoExtension(name));
                     int width = cursor.getInt(widthCol);
                     int height = cursor.getInt(heightCol);
                     long duration = (isVideo && durCol != -1) ? cursor.getLong(durCol) : 0;
@@ -110,11 +119,123 @@ public class MediaUtils {
             e.printStackTrace();
         }
 
+        // Also scan Telegram download directories directly on disk
+        scanTelegramDirectories(context, mediaList);
+
         return mediaList;
+    }
+
+    public static void scanTelegramDirectories(Context context, List<MediaItem> mediaList) {
+        Set<String> existingPaths = new HashSet<>();
+        for (MediaItem item : mediaList) {
+            if (item.getPath() != null) {
+                existingPaths.add(item.getPath().toLowerCase(Locale.ROOT));
+            }
+        }
+
+        List<File> telegramDirs = new ArrayList<>();
+        File ext = Environment.getExternalStorageDirectory();
+        File downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File pictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File movies = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+
+        if (downloads != null) telegramDirs.add(new File(downloads, "Telegram"));
+        if (pictures != null) telegramDirs.add(new File(pictures, "Telegram"));
+        if (movies != null) telegramDirs.add(new File(movies, "Telegram"));
+        if (ext != null) {
+            telegramDirs.add(new File(ext, "Telegram"));
+            telegramDirs.add(new File(ext, "Telegram/Telegram Images"));
+            telegramDirs.add(new File(ext, "Telegram/Telegram Video"));
+            telegramDirs.add(new File(ext, "Telegram/Telegram Documents"));
+            telegramDirs.add(new File(ext, "Android/media/org.telegram.messenger/Telegram/Telegram Images"));
+            telegramDirs.add(new File(ext, "Android/media/org.telegram.messenger/Telegram/Telegram Video"));
+            telegramDirs.add(new File(ext, "Android/media/org.telegram.messenger.web/Telegram/Telegram Images"));
+            telegramDirs.add(new File(ext, "Android/media/org.telegram.messenger.web/Telegram/Telegram Video"));
+            telegramDirs.add(new File(ext, "Android/data/org.telegram.messenger/files/Telegram/Telegram Images"));
+            telegramDirs.add(new File(ext, "Android/data/org.telegram.messenger/files/Telegram/Telegram Video"));
+            telegramDirs.add(new File(ext, "Android/data/org.telegram.messenger.web/files/Telegram/Telegram Images"));
+            telegramDirs.add(new File(ext, "Android/data/org.telegram.messenger.web/files/Telegram/Telegram Video"));
+        }
+
+        List<String> pathsToScan = new ArrayList<>();
+
+        for (File dir : telegramDirs) {
+            if (dir != null && dir.exists() && dir.isDirectory()) {
+                scanTelegramDirRecursive(dir, mediaList, existingPaths, pathsToScan, 0);
+            }
+        }
+
+        if (!pathsToScan.isEmpty()) {
+            try {
+                MediaScannerConnection.scanFile(
+                        context,
+                        pathsToScan.toArray(new String[0]),
+                        null,
+                        null
+                );
+            } catch (Exception ignored) {}
+        }
+    }
+
+    private static void scanTelegramDirRecursive(File dir, List<MediaItem> mediaList,
+                                                 Set<String> existingPaths, List<String> pathsToScan, int depth) {
+        if (depth > 5 || dir == null || !dir.exists() || !dir.canRead()) return;
+        File[] files = dir.listFiles();
+        if (files == null) return;
+
+        for (File f : files) {
+            if (f.isDirectory()) {
+                if (!f.getName().startsWith(".")) {
+                    scanTelegramDirRecursive(f, mediaList, existingPaths, pathsToScan, depth + 1);
+                }
+            } else if (f.isFile() && f.length() > 0) {
+                String pathLower = f.getAbsolutePath().toLowerCase(Locale.ROOT);
+                if (existingPaths.contains(pathLower)) continue;
+
+                boolean isImage = isImageExtension(f.getName());
+                boolean isVideo = isVideoExtension(f.getName());
+
+                if (isImage || isVideo) {
+                    existingPaths.add(pathLower);
+                    pathsToScan.add(f.getAbsolutePath());
+
+                    long dateMod = f.lastModified();
+                    long id = f.getAbsolutePath().hashCode();
+                    Uri uri = Uri.fromFile(f);
+                    String mime = isVideo ? "video/mp4" : "image/jpeg";
+                    String bucketName = dir.getName();
+                    long bucketId = dir.getAbsolutePath().toLowerCase(Locale.ROOT).hashCode();
+
+                    MediaItem item = new MediaItem(
+                            id, uri, f.getAbsolutePath(), f.getName(), f.length(), mime,
+                            dateMod, dateMod, 0, 0, 0, isVideo, bucketId, bucketName
+                    );
+                    mediaList.add(item);
+                }
+            }
+        }
+    }
+
+    public static boolean isImageExtension(String name) {
+        if (name == null) return false;
+        String lower = name.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png")
+                || lower.endsWith(".webp") || lower.endsWith(".gif") || lower.endsWith(".bmp")
+                || lower.endsWith(".heic") || lower.endsWith(".heif");
+    }
+
+    public static boolean isVideoExtension(String name) {
+        if (name == null) return false;
+        String lower = name.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".mp4") || lower.endsWith(".mkv") || lower.endsWith(".mov")
+                || lower.endsWith(".webm") || lower.endsWith(".3gp") || lower.endsWith(".avi")
+                || lower.endsWith(".flv");
     }
 
     public static List<FolderItem> groupMediaByFolders(List<MediaItem> mediaItems) {
         Map<String, FolderItem> folderMap = new HashMap<>();
+        Map<String, Long> latestImageDates = new HashMap<>();
+        Map<String, Long> latestMediaDates = new HashMap<>();
 
         for (MediaItem item : mediaItems) {
             String folderPath = "";
@@ -133,7 +254,9 @@ public class MediaUtils {
                 folderPath = String.valueOf(item.getBucketId());
             }
 
+            long itemDate = Math.max(item.getDateModified(), item.getDateAdded());
             FolderItem folder = folderMap.get(folderPath);
+
             if (folder == null) {
                 folder = new FolderItem(
                         item.getBucketId(),
@@ -143,14 +266,42 @@ public class MediaUtils {
                         item.getPath(),
                         1,
                         item.getSize(),
-                        item.getDateModified()
+                        itemDate
                 );
                 folderMap.put(folderPath, folder);
+
+                if (!item.isVideo()) {
+                    latestImageDates.put(folderPath, itemDate);
+                }
+                latestMediaDates.put(folderPath, itemDate);
             } else {
                 folder.setFileCount(folder.getFileCount() + 1);
                 folder.setTotalSize(folder.getTotalSize() + item.getSize());
-                if (item.getDateModified() > folder.getLastModified()) {
-                    folder.setLastModified(item.getDateModified());
+
+                if (itemDate > folder.getLastModified()) {
+                    folder.setLastModified(itemDate);
+                }
+
+                Long latestImgDate = latestImageDates.get(folderPath);
+                Long latestMedDate = latestMediaDates.get(folderPath);
+
+                if (!item.isVideo()) {
+                    // Update cover to latest image
+                    if (latestImgDate == null || itemDate > latestImgDate) {
+                        folder.setCoverUri(item.getUri());
+                        folder.setCoverPath(item.getPath());
+                        latestImageDates.put(folderPath, itemDate);
+                    }
+                } else {
+                    // Video only used as cover if no image has been found yet
+                    if (latestImgDate == null && (latestMedDate == null || itemDate > latestMedDate)) {
+                        folder.setCoverUri(item.getUri());
+                        folder.setCoverPath(item.getPath());
+                    }
+                }
+
+                if (latestMedDate == null || itemDate > latestMedDate) {
+                    latestMediaDates.put(folderPath, itemDate);
                 }
             }
         }

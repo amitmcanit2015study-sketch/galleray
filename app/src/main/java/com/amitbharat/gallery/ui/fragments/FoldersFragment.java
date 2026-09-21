@@ -93,7 +93,10 @@ public class FoldersFragment extends Fragment implements FolderGridAdapter.OnFol
             }
         } else if (chipId == R.id.chipDownloads) {
             for (FolderItem f : allFolders) {
-                if (f.getFolderName().toLowerCase(Locale.ROOT).contains("download")) {
+                String name = f.getFolderName().toLowerCase(Locale.ROOT);
+                String path = f.getFolderPath().toLowerCase(Locale.ROOT);
+                if (name.contains("download") || name.contains("telegram") ||
+                        path.contains("download") || path.contains("telegram")) {
                     filtered.add(f);
                 }
             }
@@ -119,6 +122,14 @@ public class FoldersFragment extends Fragment implements FolderGridAdapter.OnFol
         }
 
         adapter.submitList(filtered);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (viewModel != null) {
+            viewModel.loadFolders();
+        }
     }
 
     @Override

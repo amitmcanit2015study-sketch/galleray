@@ -83,7 +83,7 @@ public class FolderGridAdapter extends RecyclerView.Adapter<FolderGridAdapter.Fo
         void bind(FolderItem folder) {
             tvFolderName.setText(folder.getFolderName());
             tvCountBadge.setText(String.valueOf(folder.getFileCount()));
-            tvFolderDetails.setText(folder.getFileCount() + " items • " + FileUtils.formatFileSize(folder.getTotalSize()));
+            tvFolderDetails.setText(folder.getFileCount() == 1 ? "1 item" : folder.getFileCount() + " items");
 
             if (folder.getCoverUri() != null || folder.getCoverPath() != null) {
                 imgFolderIcon.setVisibility(View.GONE);
