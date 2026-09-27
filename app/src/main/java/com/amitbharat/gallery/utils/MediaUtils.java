@@ -55,8 +55,12 @@ public class MediaUtils {
                 + " OR "
                 + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+                + " OR "
+                + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO
                 + " OR (" + MediaStore.Files.FileColumns.MIME_TYPE + " LIKE 'image/%' AND " + MediaStore.Files.FileColumns.SIZE + " > 0)"
                 + " OR (" + MediaStore.Files.FileColumns.MIME_TYPE + " LIKE 'video/%' AND " + MediaStore.Files.FileColumns.SIZE + " > 0)"
+                + " OR (" + MediaStore.Files.FileColumns.MIME_TYPE + " LIKE 'audio/%' AND " + MediaStore.Files.FileColumns.SIZE + " > 0)"
                 + ")";
 
         String sortOrder = MediaStore.Files.FileColumns.DATE_ADDED + " DESC";
@@ -95,15 +99,20 @@ public class MediaUtils {
                     boolean isVideo = mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
                             || (mime != null && mime.startsWith("video/"))
                             || (name != null && isVideoExtension(name));
+                    boolean isAudio = !isVideo && (mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO
+                            || (mime != null && mime.startsWith("audio/"))
+                            || (name != null && isAudioExtension(name)));
                     int width = cursor.getInt(widthCol);
                     int height = cursor.getInt(heightCol);
-                    long duration = (isVideo && durCol != -1) ? cursor.getLong(durCol) : 0;
+                    long duration = ((isVideo || isAudio) && durCol != -1) ? cursor.getLong(durCol) : 0;
                     long bucketId = bucketIdCol != -1 ? cursor.getLong(bucketIdCol) : 0;
                     String bucketName = bucketNameCol != -1 ? cursor.getString(bucketNameCol) : "";
 
                     Uri contentUri;
                     if (isVideo) {
                         contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
+                    } else if (isAudio) {
+                        contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
                     } else {
                         contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
                     }
@@ -111,6 +120,7 @@ public class MediaUtils {
                     if (path != null && new File(path).exists()) {
                         MediaItem item = new MediaItem(id, contentUri, path, name, size, mime,
                                 dateAdded, dateModified, duration, width, height, isVideo, bucketId, bucketName);
+                        item.setAudio(isAudio);
                         mediaList.add(item);
                     }
                 }
@@ -230,6 +240,14 @@ public class MediaUtils {
         return lower.endsWith(".mp4") || lower.endsWith(".mkv") || lower.endsWith(".mov")
                 || lower.endsWith(".webm") || lower.endsWith(".3gp") || lower.endsWith(".avi")
                 || lower.endsWith(".flv");
+    }
+
+    public static boolean isAudioExtension(String name) {
+        if (name == null) return false;
+        String lower = name.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".mp3") || lower.endsWith(".wav") || lower.endsWith(".m4a")
+                || lower.endsWith(".flac") || lower.endsWith(".aac") || lower.endsWith(".ogg")
+                || lower.endsWith(".wma") || lower.endsWith(".opus") || lower.endsWith(".m4p");
     }
 
     public static List<FolderItem> groupMediaByFolders(List<MediaItem> mediaItems) {

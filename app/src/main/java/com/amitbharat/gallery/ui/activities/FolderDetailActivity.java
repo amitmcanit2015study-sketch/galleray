@@ -49,6 +49,10 @@ public class FolderDetailActivity extends AppCompatActivity implements MediaGrid
     private FilterOptions.SortOrder currentSort = FilterOptions.SortOrder.DATE_DESC;
     private MediaRepository mediaRepository;
     private FavoriteDao favoriteDao;
+    private static final int INITIAL_PAGE_SIZE = 80;
+    private static final int LOAD_MORE_PAGE_SIZE = 60;
+    private int currentLoadedCount = 0;
+    private boolean isLoadingMore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +141,33 @@ public class FolderDetailActivity extends AppCompatActivity implements MediaGrid
         setupLayoutManager();
         binding.recyclerViewMedia.setAdapter(adapter);
         binding.swipeRefresh.setOnRefreshListener(this::loadFolderMedia);
+
+        binding.recyclerViewMedia.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy <= 0) return;
+
+                RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+                if (lm instanceof LinearLayoutManager) {
+                    int totalCount = lm.getItemCount();
+                    int lastVisible = ((LinearLayoutManager) lm).findLastVisibleItemPosition();
+                    if (!isLoadingMore && currentLoadedCount < mediaItems.size() && totalCount <= lastVisible + 20) {
+                        loadNextChunk();
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadNextChunk() {
+        if (isLoadingMore || currentLoadedCount >= mediaItems.size()) return;
+        isLoadingMore = true;
+        int nextCount = Math.min(currentLoadedCount + LOAD_MORE_PAGE_SIZE, mediaItems.size());
+        List<MediaItem> more = new ArrayList<>(mediaItems.subList(currentLoadedCount, nextCount));
+        adapter.appendItems(more);
+        currentLoadedCount = nextCount;
+        isLoadingMore = false;
     }
 
     private void setupLayoutManager() {
@@ -373,7 +404,9 @@ public class FolderDetailActivity extends AppCompatActivity implements MediaGrid
             runOnUiThread(() -> {
                 mediaItems.clear();
                 mediaItems.addAll(folderMedia);
-                adapter.submitList(new ArrayList<>(mediaItems));
+                int initialCount = Math.min(INITIAL_PAGE_SIZE, mediaItems.size());
+                currentLoadedCount = initialCount;
+                adapter.submitList(new ArrayList<>(mediaItems.subList(0, initialCount)));
                 binding.progressBar.setVisibility(View.GONE);
                 binding.swipeRefresh.setRefreshing(false);
                 binding.toolbar.setSubtitle(mediaItems.size() + (mediaItems.size() == 1 ? " item" : " items"));
@@ -395,7 +428,9 @@ public class FolderDetailActivity extends AppCompatActivity implements MediaGrid
             else if (checkedId == R.id.rbSizeAsc) currentSort = FilterOptions.SortOrder.SIZE_ASC;
 
             MediaRepository.sortMediaList(mediaItems, currentSort);
-            adapter.submitList(new ArrayList<>(mediaItems));
+            int initialCount = Math.min(INITIAL_PAGE_SIZE, mediaItems.size());
+            currentLoadedCount = initialCount;
+            adapter.submitList(new ArrayList<>(mediaItems.subList(0, initialCount)));
             dialog.dismiss();
         });
 
@@ -411,6 +446,11 @@ public class FolderDetailActivity extends AppCompatActivity implements MediaGrid
             if (item.isVideo()) {
                 Intent intent = new Intent(this, VideoPlayerActivity.class);
                 intent.putExtra("media_item", item);
+                startActivity(intent);
+            } else if (item.isAudio()) {
+                com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(mediaItems);
+                Intent intent = new Intent(this, AudioPlayerActivity.class);
+                intent.putExtra("current_position", position);
                 startActivity(intent);
             } else {
                 com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(mediaItems);

@@ -51,9 +51,11 @@ public class SearchViewModel extends AndroidViewModel {
 
                 boolean matchesType = true;
                 if (filter == FilterOptions.TypeFilter.IMAGES) {
-                    matchesType = !item.isVideo();
+                    matchesType = !item.isVideo() && !item.isAudio();
                 } else if (filter == FilterOptions.TypeFilter.VIDEOS) {
                     matchesType = item.isVideo();
+                } else if (filter == FilterOptions.TypeFilter.AUDIO) {
+                    matchesType = item.isAudio();
                 } else if (filter == FilterOptions.TypeFilter.GIF) {
                     matchesType = item.getMimeType() != null && item.getMimeType().contains("gif");
                 } else if (filter == FilterOptions.TypeFilter.LARGE) {

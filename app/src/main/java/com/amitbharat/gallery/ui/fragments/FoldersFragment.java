@@ -28,6 +28,7 @@ public class FoldersFragment extends Fragment implements FolderGridAdapter.OnFol
     private FoldersViewModel viewModel;
     private FolderGridAdapter adapter;
     private List<FolderItem> allFolders = new ArrayList<>();
+    private boolean hasLoaded = false;
 
     @Nullable
     @Override
@@ -47,7 +48,10 @@ public class FoldersFragment extends Fragment implements FolderGridAdapter.OnFol
         binding.recyclerViewFolders.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         binding.recyclerViewFolders.setAdapter(adapter);
 
-        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.loadFolders());
+        binding.swipeRefresh.setOnRefreshListener(() -> {
+            hasLoaded = true;
+            viewModel.loadFolders();
+        });
 
         setupFilterChips();
 
@@ -60,8 +64,13 @@ public class FoldersFragment extends Fragment implements FolderGridAdapter.OnFol
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             binding.swipeRefresh.setRefreshing(isLoading);
         });
+    }
 
-        viewModel.loadFolders();
+    public void loadDataIfNeeded() {
+        if (!hasLoaded && viewModel != null) {
+            hasLoaded = true;
+            viewModel.loadFolders();
+        }
     }
 
     private void setupFilterChips() {
@@ -127,7 +136,7 @@ public class FoldersFragment extends Fragment implements FolderGridAdapter.OnFol
     @Override
     public void onResume() {
         super.onResume();
-        if (viewModel != null) {
+        if (hasLoaded && viewModel != null) {
             viewModel.loadFolders();
         }
     }

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.amitbharat.gallery.data.models.MediaItem;
 import com.amitbharat.gallery.databinding.FragmentAllMediaBinding;
+import com.amitbharat.gallery.ui.activities.AudioPlayerActivity;
 import com.amitbharat.gallery.ui.activities.ImageViewerActivity;
 import com.amitbharat.gallery.ui.activities.MainActivity;
 import com.amitbharat.gallery.ui.activities.VideoPlayerActivity;
@@ -21,11 +22,20 @@ import com.amitbharat.gallery.utils.PreferencesManager;
 import com.amitbharat.gallery.viewmodel.AllMediaViewModel;
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+
 public class AllMediaFragment extends Fragment implements MediaGridAdapter.OnMediaClickListener {
+
+    private static final int INITIAL_PAGE_SIZE = 80;
+    private static final int LOAD_MORE_PAGE_SIZE = 60;
 
     private FragmentAllMediaBinding binding;
     private AllMediaViewModel viewModel;
     private MediaGridAdapter adapter;
+    private final List<MediaItem> allMediaItems = new ArrayList<>();
+    private int currentLoadedCount = 0;
+    private boolean isLoadingMore = false;
 
     @Nullable
     @Override
@@ -45,11 +55,19 @@ public class AllMediaFragment extends Fragment implements MediaGridAdapter.OnMed
         setupLayoutManager();
         binding.recyclerViewMedia.setAdapter(adapter);
 
+        setupScrollPagination();
+
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.loadMedia());
 
         viewModel.getMediaList().observe(getViewLifecycleOwner(), items -> {
-            adapter.submitList(items);
-            binding.emptyState.setVisibility(items == null || items.isEmpty() ? View.VISIBLE : View.GONE);
+            allMediaItems.clear();
+            if (items != null) {
+                allMediaItems.addAll(items);
+            }
+            int initialCount = Math.min(INITIAL_PAGE_SIZE, allMediaItems.size());
+            currentLoadedCount = initialCount;
+            adapter.submitList(new ArrayList<>(allMediaItems.subList(0, initialCount)));
+            binding.emptyState.setVisibility(allMediaItems.isEmpty() ? View.VISIBLE : View.GONE);
         });
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
@@ -69,6 +87,41 @@ public class AllMediaFragment extends Fragment implements MediaGridAdapter.OnMed
         });
 
         if (viewModel.getMediaList().getValue() == null || viewModel.getMediaList().getValue().isEmpty()) {
+            viewModel.loadMedia();
+        }
+    }
+
+    private void setupScrollPagination() {
+        binding.recyclerViewMedia.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy <= 0) return;
+
+                RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+                if (lm instanceof LinearLayoutManager) {
+                    int totalCount = lm.getItemCount();
+                    int lastVisible = ((LinearLayoutManager) lm).findLastVisibleItemPosition();
+                    if (!isLoadingMore && currentLoadedCount < allMediaItems.size() && totalCount <= lastVisible + 20) {
+                        loadNextChunk();
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadNextChunk() {
+        if (isLoadingMore || currentLoadedCount >= allMediaItems.size()) return;
+        isLoadingMore = true;
+        int nextCount = Math.min(currentLoadedCount + LOAD_MORE_PAGE_SIZE, allMediaItems.size());
+        List<MediaItem> more = new ArrayList<>(allMediaItems.subList(currentLoadedCount, nextCount));
+        adapter.appendItems(more);
+        currentLoadedCount = nextCount;
+        isLoadingMore = false;
+    }
+
+    public void loadDataIfNeeded() {
+        if (viewModel != null && (viewModel.getMediaList().getValue() == null || viewModel.getMediaList().getValue().isEmpty())) {
             viewModel.loadMedia();
         }
     }
@@ -126,10 +179,19 @@ public class AllMediaFragment extends Fragment implements MediaGridAdapter.OnMed
                 Intent intent = new Intent(requireContext(), VideoPlayerActivity.class);
                 intent.putExtra("media_item", item);
                 startActivity(intent);
+            } else if (item.isAudio()) {
+                List<MediaItem> fullList = allMediaItems.isEmpty() ? adapter.getMediaList() : allMediaItems;
+                com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(fullList);
+                int actualPos = fullList.indexOf(item);
+                Intent intent = new Intent(requireContext(), AudioPlayerActivity.class);
+                intent.putExtra("current_position", actualPos >= 0 ? actualPos : position);
+                startActivity(intent);
             } else {
-                com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(adapter.getMediaList());
+                List<MediaItem> fullList = allMediaItems.isEmpty() ? adapter.getMediaList() : allMediaItems;
+                com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(fullList);
+                int actualPos = fullList.indexOf(item);
                 Intent intent = new Intent(requireContext(), ImageViewerActivity.class);
-                intent.putExtra("current_position", position);
+                intent.putExtra("current_position", actualPos >= 0 ? actualPos : position);
                 startActivity(intent);
             }
         }

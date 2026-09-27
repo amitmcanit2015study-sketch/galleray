@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Scrollbar & FastScroll Colors (Night / Dark Mode) -->
+    <color name="scrollbar_thumb">#808C9EFF</color>
+    <color name="scrollbar_track">#1AFFFFFF</color>
+    <color name="fastscroll_thumb">#A08C9EFF</color>
+    <color name="fastscroll_track">#1AFFFFFF</color>
+</resources>

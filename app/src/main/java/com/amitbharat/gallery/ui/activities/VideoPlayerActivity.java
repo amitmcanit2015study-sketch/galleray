@@ -57,6 +57,14 @@ public class VideoPlayerActivity extends AppCompatActivity implements VideoGestu
             return;
         }
 
+        if (mediaItem.isAudio()) {
+            Intent audioIntent = new Intent(this, AudioPlayerActivity.class);
+            audioIntent.putExtra("media_item", mediaItem);
+            startActivity(audioIntent);
+            finish();
+            return;
+        }
+
         setupGestureOverlay();
         setupControls();
         initializePlayer();
@@ -119,7 +127,14 @@ public class VideoPlayerActivity extends AppCompatActivity implements VideoGestu
     }
 
     private void initializePlayer() {
-        player = new ExoPlayer.Builder(this).build();
+        androidx.media3.common.AudioAttributes audioAttributes = new androidx.media3.common.AudioAttributes.Builder()
+                .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MOVIE)
+                .setUsage(androidx.media3.common.C.USAGE_MEDIA)
+                .build();
+
+        player = new ExoPlayer.Builder(this)
+                .setAudioAttributes(audioAttributes, true)
+                .build();
         binding.playerView.setPlayer(player);
 
         Uri uri = mediaItem.getUri();

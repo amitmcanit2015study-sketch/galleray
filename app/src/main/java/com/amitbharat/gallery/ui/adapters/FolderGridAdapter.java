@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.amitbharat.gallery.R;
 import com.amitbharat.gallery.data.models.FolderItem;
@@ -89,6 +90,9 @@ public class FolderGridAdapter extends RecyclerView.Adapter<FolderGridAdapter.Fo
                 imgFolderIcon.setVisibility(View.GONE);
                 Glide.with(context)
                         .load(folder.getCoverUri() != null ? folder.getCoverUri() : folder.getCoverPath())
+                        .thumbnail(0.2f)
+                        .override(320, 320)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .centerCrop()
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(imgCover);

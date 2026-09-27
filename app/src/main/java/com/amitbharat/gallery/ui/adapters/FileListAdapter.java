@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.amitbharat.gallery.R;
 import com.amitbharat.gallery.data.models.FileItem;
 import com.amitbharat.gallery.utils.DateUtils;
@@ -115,7 +117,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.FileVi
                 if (ext.equals("jpg") || ext.equals("png") || ext.equals("jpeg") || ext.equals("webp") || ext.equals("mp4")) {
                     Glide.with(context)
                             .load(new File(item.getPath()))
+                            .thumbnail(0.2f)
+                            .override(120, 120)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .centerCrop()
+                            .transition(DrawableTransitionOptions.withCrossFade())
                             .placeholder(FileUtils.getFileIconRes(item))
                             .into(imgFileIcon);
                 } else {

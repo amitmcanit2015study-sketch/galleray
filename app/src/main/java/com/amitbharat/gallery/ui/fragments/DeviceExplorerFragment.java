@@ -45,6 +45,7 @@ public class DeviceExplorerFragment extends Fragment implements
     private FileListAdapter fileAdapter;
     private StorageVolumeAdapter volumeAdapter;
     private BreadcrumbAdapter breadcrumbAdapter;
+    private boolean hasLoaded = false;
 
     @Nullable
     @Override
@@ -74,22 +75,30 @@ public class DeviceExplorerFragment extends Fragment implements
         binding.recyclerViewFiles.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewFiles.setAdapter(fileAdapter);
 
-        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refresh());
+        binding.swipeRefresh.setOnRefreshListener(() -> {
+            hasLoaded = true;
+            viewModel.refresh();
+        });
 
         setupClickListeners();
         observeViewModel();
+    }
 
-        viewModel.loadStorageVolumes();
-        File root = Environment.getExternalStorageDirectory();
-        if (root != null) {
-            viewModel.openPath(root.getAbsolutePath());
+    public void loadDataIfNeeded() {
+        if (!hasLoaded && viewModel != null) {
+            hasLoaded = true;
+            viewModel.loadStorageVolumes();
+            File root = Environment.getExternalStorageDirectory();
+            if (root != null) {
+                viewModel.openPath(root.getAbsolutePath());
+            }
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (viewModel != null) {
+        if (hasLoaded && viewModel != null) {
             viewModel.refresh();
         }
     }
@@ -196,6 +205,31 @@ public class DeviceExplorerFragment extends Fragment implements
                 com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(imageList);
                 Intent intent = new Intent(requireContext(), com.amitbharat.gallery.ui.activities.ImageViewerActivity.class);
                 intent.putExtra("current_position", clickedIndex);
+            } else if (isAudioFile(file)) {
+                List<FileItem> allFiles = viewModel.getCurrentFilesLive().getValue();
+                List<MediaItem> audioList = new ArrayList<>();
+                int clickedIndex = 0;
+                if (allFiles != null) {
+                    for (FileItem f : allFiles) {
+                        if (isAudioFile(f)) {
+                            if (f.getPath().equals(file.getPath())) {
+                                clickedIndex = audioList.size();
+                            }
+                            MediaItem m = fileItemToMediaItem(f);
+                            m.setAudio(true);
+                            audioList.add(m);
+                        }
+                    }
+                }
+                if (audioList.isEmpty()) {
+                    MediaItem m = fileItemToMediaItem(file);
+                    m.setAudio(true);
+                    audioList.add(m);
+                    clickedIndex = 0;
+                }
+                com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(audioList);
+                Intent intent = new Intent(requireContext(), com.amitbharat.gallery.ui.activities.AudioPlayerActivity.class);
+                intent.putExtra("current_position", clickedIndex);
                 startActivity(intent);
             } else {
                 FileUtils.openFileWithIntent(requireContext(), new File(file.getPath()));
@@ -221,6 +255,14 @@ public class DeviceExplorerFragment extends Fragment implements
                 ext.equals("m4v") || ext.equals("mpg") || ext.equals("mpeg");
     }
 
+    private boolean isAudioFile(FileItem file) {
+        if (file == null || file.isDirectory() || file.getPath() == null) return false;
+        String ext = file.getExtension().toLowerCase(java.util.Locale.ROOT);
+        return ext.equals("mp3") || ext.equals("wav") || ext.equals("m4a") ||
+                ext.equals("flac") || ext.equals("aac") || ext.equals("ogg") ||
+                ext.equals("wma") || ext.equals("opus") || ext.equals("m4p");
+    }
+
     private MediaItem fileItemToMediaItem(FileItem file) {
         MediaItem item = new MediaItem();
         item.setPath(file.getPath());
@@ -233,6 +275,7 @@ public class DeviceExplorerFragment extends Fragment implements
         item.setUriString(uri.toString());
         item.setMimeType(FileUtils.getMimeType(file.getPath()));
         item.setVideo(isVideoFile(file));
+        item.setAudio(isAudioFile(file));
         return item;
     }
 

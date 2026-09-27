@@ -15,7 +15,11 @@ import com.amitbharat.gallery.databinding.ActivitySearchBinding;
 import com.amitbharat.gallery.ui.adapters.MediaGridAdapter;
 import com.amitbharat.gallery.utils.PreferencesManager;
 import com.amitbharat.gallery.viewmodel.SearchViewModel;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements MediaGridAdapter.OnMediaClickListener {
 
@@ -23,6 +27,11 @@ public class SearchActivity extends AppCompatActivity implements MediaGridAdapte
     private SearchViewModel viewModel;
     private MediaGridAdapter adapter;
     private FilterOptions.TypeFilter currentFilter = FilterOptions.TypeFilter.ALL;
+    private final List<MediaItem> allSearchResults = new ArrayList<>();
+    private static final int INITIAL_PAGE_SIZE = 60;
+    private static final int LOAD_MORE_PAGE_SIZE = 40;
+    private int currentLoadedCount = 0;
+    private boolean isLoadingMore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +58,33 @@ public class SearchActivity extends AppCompatActivity implements MediaGridAdapte
         int cols = PreferencesManager.getInstance(this).getGridColumns();
         binding.recyclerViewSearch.setLayoutManager(new GridLayoutManager(this, cols));
         binding.recyclerViewSearch.setAdapter(adapter);
+
+        binding.recyclerViewSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy <= 0) return;
+
+                RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+                if (lm instanceof LinearLayoutManager) {
+                    int totalCount = lm.getItemCount();
+                    int lastVisible = ((LinearLayoutManager) lm).findLastVisibleItemPosition();
+                    if (!isLoadingMore && currentLoadedCount < allSearchResults.size() && totalCount <= lastVisible + 20) {
+                        loadNextChunk();
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadNextChunk() {
+        if (isLoadingMore || currentLoadedCount >= allSearchResults.size()) return;
+        isLoadingMore = true;
+        int nextCount = Math.min(currentLoadedCount + LOAD_MORE_PAGE_SIZE, allSearchResults.size());
+        List<MediaItem> more = new ArrayList<>(allSearchResults.subList(currentLoadedCount, nextCount));
+        adapter.appendItems(more);
+        currentLoadedCount = nextCount;
+        isLoadingMore = false;
     }
 
     private void setupSearchInput() {
@@ -72,6 +108,8 @@ public class SearchActivity extends AppCompatActivity implements MediaGridAdapte
                 currentFilter = FilterOptions.TypeFilter.IMAGES;
             } else if (id == R.id.chipFilterVideos) {
                 currentFilter = FilterOptions.TypeFilter.VIDEOS;
+            } else if (id == R.id.chipFilterAudio) {
+                currentFilter = FilterOptions.TypeFilter.AUDIO;
             } else if (id == R.id.chipFilterGif) {
                 currentFilter = FilterOptions.TypeFilter.GIF;
             } else if (id == R.id.chipFilterLarge) {
@@ -83,8 +121,14 @@ public class SearchActivity extends AppCompatActivity implements MediaGridAdapte
 
     private void observeViewModel() {
         viewModel.getSearchResultsLive().observe(this, results -> {
-            adapter.submitList(results);
-            binding.emptyState.setVisibility(results == null || results.isEmpty() ? View.VISIBLE : View.GONE);
+            allSearchResults.clear();
+            if (results != null) {
+                allSearchResults.addAll(results);
+            }
+            int initialCount = Math.min(INITIAL_PAGE_SIZE, allSearchResults.size());
+            currentLoadedCount = initialCount;
+            adapter.submitList(new ArrayList<>(allSearchResults.subList(0, initialCount)));
+            binding.emptyState.setVisibility(allSearchResults.isEmpty() ? View.VISIBLE : View.GONE);
         });
 
         viewModel.getIsSearchingLive().observe(this, isSearching -> {
@@ -98,10 +142,19 @@ public class SearchActivity extends AppCompatActivity implements MediaGridAdapte
             Intent intent = new Intent(this, VideoPlayerActivity.class);
             intent.putExtra("media_item", item);
             startActivity(intent);
+        } else if (item.isAudio()) {
+            List<MediaItem> fullList = allSearchResults.isEmpty() ? adapter.getMediaList() : allSearchResults;
+            com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(fullList);
+            int actualPos = fullList.indexOf(item);
+            Intent intent = new Intent(this, AudioPlayerActivity.class);
+            intent.putExtra("current_position", actualPos >= 0 ? actualPos : position);
+            startActivity(intent);
         } else {
-            com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(adapter.getMediaList());
+            List<MediaItem> fullList = allSearchResults.isEmpty() ? adapter.getMediaList() : allSearchResults;
+            com.amitbharat.gallery.utils.MediaHolder.setCurrentMediaList(fullList);
+            int actualPos = fullList.indexOf(item);
             Intent intent = new Intent(this, ImageViewerActivity.class);
-            intent.putExtra("current_position", position);
+            intent.putExtra("current_position", actualPos >= 0 ? actualPos : position);
             startActivity(intent);
         }
     }

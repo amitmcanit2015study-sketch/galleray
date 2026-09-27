@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class FilterOptions implements Serializable {
     public enum TypeFilter {
-        ALL, IMAGES, VIDEOS, GIF, RAW, LARGE, RECENT, FAVORITES
+        ALL, IMAGES, VIDEOS, AUDIO, GIF, RAW, LARGE, RECENT, FAVORITES
     }
 
     public enum SortOrder {

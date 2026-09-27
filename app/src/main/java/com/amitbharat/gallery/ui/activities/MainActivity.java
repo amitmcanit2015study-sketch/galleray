@@ -93,7 +93,24 @@ public class MainActivity extends AppCompatActivity {
                             dataUri.getPath().endsWith(".avi")
                     ));
 
-            if (isVideo) {
+            boolean isAudio = (type != null && type.startsWith("audio")) ||
+                    (dataUri.getPath() != null && (
+                            dataUri.getPath().endsWith(".mp3") ||
+                            dataUri.getPath().endsWith(".wav") ||
+                            dataUri.getPath().endsWith(".m4a") ||
+                            dataUri.getPath().endsWith(".flac") ||
+                            dataUri.getPath().endsWith(".aac") ||
+                            dataUri.getPath().endsWith(".ogg") ||
+                            dataUri.getPath().endsWith(".wma") ||
+                            dataUri.getPath().endsWith(".opus")
+                    ));
+
+            if (isAudio) {
+                Intent audioIntent = new Intent(this, AudioPlayerActivity.class);
+                audioIntent.setDataAndType(dataUri, type);
+                audioIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(audioIntent);
+            } else if (isVideo) {
                 Intent videoIntent = new Intent(this, VideoPlayerActivity.class);
                 videoIntent.setDataAndType(dataUri, type);
                 videoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -223,6 +240,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                if (position == 0 && allMediaFragment != null) {
+                    allMediaFragment.loadDataIfNeeded();
+                } else if (position == 1 && foldersFragment != null) {
+                    foldersFragment.loadDataIfNeeded();
+                } else if (position == 2 && deviceExplorerFragment != null) {
+                    deviceExplorerFragment.loadDataIfNeeded();
+                }
+
                 if (position == 2) {
                     if (Boolean.TRUE.equals(mediaViewModel.getIsSelectionMode().getValue())) {
                         mediaViewModel.clearSelection();

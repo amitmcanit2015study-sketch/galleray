@@ -1,6 +1,6 @@
 # 🖼️ Gallery — App Functionality & User Guide
 
-**Version:** 1.0.1 (Production Build)  
+**Version:** 1.1.1 (Production Build)  
 **Developer:** Amit Bharat  
 **Company:** Rooys Soft Tech  
 **Contact:** rooyssofttech2020@gmail.com  

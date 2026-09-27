@@ -17,10 +17,11 @@ public class MediaItem implements Serializable {
     private String mimeType;
     private long dateAdded;
     private long dateModified;
-    private long duration; // In milliseconds for videos
+    private long duration; // In milliseconds for videos and audio
     private int width;
     private int height;
     private boolean isVideo;
+    private boolean isAudio;
     private boolean isFavorite;
     private boolean isSelected;
     private long bucketId;
@@ -108,6 +109,19 @@ public class MediaItem implements Serializable {
 
     public boolean isVideo() { return isVideo; }
     public void setVideo(boolean video) { isVideo = video; }
+
+    public boolean isAudio() {
+        if (isAudio) return true;
+        if (mimeType != null && mimeType.startsWith("audio/")) return true;
+        if (displayName != null) {
+            String n = displayName.toLowerCase(java.util.Locale.ROOT);
+            return n.endsWith(".mp3") || n.endsWith(".wav") || n.endsWith(".m4a") ||
+                   n.endsWith(".flac") || n.endsWith(".aac") || n.endsWith(".ogg") ||
+                   n.endsWith(".wma") || n.endsWith(".opus") || n.endsWith(".m4p");
+        }
+        return false;
+    }
+    public void setAudio(boolean audio) { isAudio = audio; }
 
     public boolean isFavorite() { return isFavorite; }
     public void setFavorite(boolean favorite) { isFavorite = favorite; }

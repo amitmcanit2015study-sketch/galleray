@@ -21,7 +21,7 @@ public class AboutActivity extends AppCompatActivity {
             + "• Developed by: Amit Bharat\n"
             + "• Company: Rooys Soft Tech\n"
             + "• Contact: rooyssofttech2020@gmail.com\n"
-            + "• Version: 1.0.1\n\n"
+            + "• Version: 1.1.1\n\n"
             + "Install the attached APK to get started!";
 
     @Override

@@ -75,4 +75,10 @@
     <color name="selection_overlay">#553B50DF</color>
     <color name="card_stroke_light">#E0E0E6</color>
     <color name="card_stroke_dark">#2C2D35</color>
+
+    <!-- Scrollbar & FastScroll Colors -->
+    <color name="scrollbar_thumb">#803B50DF</color>
+    <color name="scrollbar_track">#15000000</color>
+    <color name="fastscroll_thumb">#A03B50DF</color>
+    <color name="fastscroll_track">#15000000</color>
 </resources>

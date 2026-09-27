@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.amitbharat.gallery.R;
 import com.amitbharat.gallery.data.models.MediaItem;
@@ -85,6 +86,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mediaList;
     }
 
+    public void appendItems(List<MediaItem> moreItems) {
+        if (moreItems == null || moreItems.isEmpty()) return;
+        int startPos = mediaList.size();
+        mediaList.addAll(moreItems);
+        notifyItemRangeInserted(startPos, moreItems.size());
+    }
+
     public void clearAllSelections() {
         for (MediaItem item : mediaList) {
             item.setSelected(false);
@@ -153,17 +161,34 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         void bind(MediaItem item) {
-            Glide.with(context)
-                    .load(item.getUri() != null ? item.getUri() : item.getPath())
-                    .centerCrop()
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(imgThumbnail);
-
-            if (item.isVideo() && item.getDuration() > 0) {
+            if (item.isAudio()) {
+                Glide.with(context)
+                        .load(item.getUri() != null ? item.getUri() : item.getPath())
+                        .thumbnail(0.2f)
+                        .override(280, 280)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.ic_audio_disc)
+                        .error(R.drawable.ic_audio_disc)
+                        .centerCrop()
+                        .into(imgThumbnail);
                 tvDuration.setVisibility(View.VISIBLE);
-                tvDuration.setText(MediaUtils.formatDuration(item.getDuration()));
+                tvDuration.setText(item.getDuration() > 0 ? "🎵 " + MediaUtils.formatDuration(item.getDuration()) : "🎵 Audio");
             } else {
-                tvDuration.setVisibility(View.GONE);
+                Glide.with(context)
+                        .load(item.getUri() != null ? item.getUri() : item.getPath())
+                        .thumbnail(0.2f)
+                        .override(280, 280)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(imgThumbnail);
+
+                if (item.isVideo() && item.getDuration() > 0) {
+                    tvDuration.setVisibility(View.VISIBLE);
+                    tvDuration.setText(MediaUtils.formatDuration(item.getDuration()));
+                } else {
+                    tvDuration.setVisibility(View.GONE);
+                }
             }
 
             imgCheck.setVisibility(item.isSelected() ? View.VISIBLE : View.GONE);
@@ -201,16 +226,34 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         void bind(MediaItem item) {
-            Glide.with(context)
-                    .load(item.getUri() != null ? item.getUri() : item.getPath())
-                    .centerCrop()
-                    .into(imgThumbnail);
+            if (item.isAudio()) {
+                Glide.with(context)
+                        .load(item.getUri() != null ? item.getUri() : item.getPath())
+                        .thumbnail(0.2f)
+                        .override(160, 160)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.ic_audio_disc)
+                        .error(R.drawable.ic_audio_disc)
+                        .centerCrop()
+                        .into(imgThumbnail);
+            } else {
+                Glide.with(context)
+                        .load(item.getUri() != null ? item.getUri() : item.getPath())
+                        .thumbnail(0.2f)
+                        .override(160, 160)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .into(imgThumbnail);
+            }
 
             tvTitle.setText(item.getDisplayName());
-            String details = FileUtils.formatFileSize(item.getSize()) + " • " + DateUtils.formatDate(item.getDateAdded());
+            String details = (item.isAudio() ? "Audio • " : "") + FileUtils.formatFileSize(item.getSize()) + " • " + DateUtils.formatDate(item.getDateAdded());
             tvDetails.setText(details);
 
-            if (item.isVideo() && item.getDuration() > 0) {
+            if (item.isAudio()) {
+                tvDuration.setVisibility(View.VISIBLE);
+                tvDuration.setText(item.getDuration() > 0 ? "🎵 " + MediaUtils.formatDuration(item.getDuration()) : "🎵 Audio");
+            } else if (item.isVideo() && item.getDuration() > 0) {
                 tvDuration.setVisibility(View.VISIBLE);
                 tvDuration.setText(MediaUtils.formatDuration(item.getDuration()));
             } else {

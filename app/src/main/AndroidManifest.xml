@@ -114,6 +114,20 @@
             </intent-filter>
         </activity>
 
+        <!-- Audio Player (ExoPlayer with controls, repeat, speed, playlist) -->
+        <activity
+            android:name=".ui.activities.AudioPlayerActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:parentActivityName=".ui.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+        </activity>
+
         <!-- Video Trim & Cutter Tool -->
         <activity
             android:name=".ui.activities.VideoTrimActivity"

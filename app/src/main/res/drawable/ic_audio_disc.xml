@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Outer Vinyl Disc -->
+    <path
+        android:fillColor="#1E1E28"
+        android:pathData="M60,10 A50,50 0 1,0 60,110 A50,50 0 1,0 60,10 Z" />
+    <!-- Grooves Ring 1 -->
+    <path
+        android:strokeColor="#33FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M60,22 A38,38 0 1,0 60,98 A38,38 0 1,0 60,22 Z" />
+    <!-- Grooves Ring 2 -->
+    <path
+        android:strokeColor="#22FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M60,32 A28,28 0 1,0 60,88 A28,28 0 1,0 60,32 Z" />
+    <!-- Center Label Disc -->
+    <path
+        android:fillColor="#3B50DF"
+        android:pathData="M60,42 A18,18 0 1,0 60,78 A18,18 0 1,0 60,42 Z" />
+    <!-- Center Spindle Hole -->
+    <path
+        android:fillColor="#0D0E12"
+        android:pathData="M60,56 A4,4 0 1,0 60,64 A4,4 0 1,0 60,56 Z" />
+</vector>
